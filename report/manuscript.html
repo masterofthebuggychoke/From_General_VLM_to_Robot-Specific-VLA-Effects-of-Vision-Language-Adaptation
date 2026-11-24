@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Does visual grounding transfer to robot control?</title>
+<meta name="description" content="A capstone research report on grounded VQA, action learning in LIBERO, and real SO-101 data.">
+<meta name="author" content="Handonghyun">
+<link rel="stylesheet" href="report.css"></head><body><article>
+<section class="sheet cover" id="abstract">
+<header class="running"><strong>ROBOTICS CAPSTONE</strong><span>Experimental report · 23 November 2026</span></header>
+<div class="cover-top"><p class="kicker">Vision–language–action models</p>
+<h1>Does visual grounding transfer to robot control?</h1>
+<p class="deck">A controlled SmolVLA study in LIBERO, with a physical SO-101 workcell and a LIBERO-Pro 2.0 extension.</p>
+<p class="byline">Handonghyun</p></div>
+<figure><img src="../site/assets/so101-rollout-record.jpg" alt="SO-101 gripper beside a red block and basket on the team's physical test table."><figcaption><b>Cover.</b> The physical pick-and-place workcell in the team’s 17 November rollout record, p. 51. The still documents the setup and an instant during execution.</figcaption></figure>
+<h3>Abstract</h3>
+<p class="abstract">We asked whether answering questions about objects and their spatial relationships before action learning improves a robot policy trained on the same demonstrations. Across 40 LIBERO tasks, the answer depended on when and how the action policy was trained. At 12,000 optimizer updates, mixed visual question answering raised success from 74.05% to 81.25% with the vision–language model frozen. With joint tuning, the same initialization led at 4,000 updates but trailed the Base model at 12,000 (81.55% versus 85.75%).</p>
+<p class="abstract">On a physical SO-101, we recorded two synchronized camera views and six position channels per timestep, trained policies on 75 demonstrations, and verified a served checkpoint. A separate real-image test found coarse localization substantially easier than precise box prediction. In an interim Pro 2.0 comparison on 1,936 shared trial IDs, the frozen and jointly tuned 30k Base policies succeeded three and two times, respectively. Autonomous physical task success remains unscored.</p>
+<footer class="folio"><span>SmolVLA · Grounded vision and robot action</span><b>01 / 10</b></footer></section>
+
+<section class="sheet" id="design">
+<header class="running"><strong>EXPERIMENTAL DESIGN</strong><span>Grounding and action learning</span></header>
+<p class="kicker">01 &nbsp; / &nbsp; Research question</p><h2>What should visual supervision transfer?</h2>
+<p class="deck">For a language-conditioned manipulator, choosing the correct object is part of the action problem. A single demonstration can also supervise where that object appears and how it relates to its neighbors.</p>
+<p>New physical demonstrations require robot time, sensors and an operator. Our September design asked whether extra supervision derived from robot imagery could improve use of a fixed action dataset. To test the idea, we changed the visual starting point of the same action learner and measured task completion at several checkpoints.</p>
+<div class="call"><h3 style="margin-top:0">One recorded LIBERO training example</h3><p>In Spatial task 0, demonstration 0, frame 10, the instruction names the black bowl between the plate and ramekin. Its visible box is <span class="mono">[688, 348, 830, 461]</span> in XYXY coordinates on a 0–1000 scale. A second question asks whether the bowl’s visible-region center lies above or below the plate’s. The labeled answer is <b>below</b>. Both answers come from simulator instance masks.</p></div>
+<div class="grid2 split-top">
+<div class="step"><h3>Before action training</h3><p>The Base VLM starts with released SmolVLA visual-language weights. Mixed + LIBERO starts from the same weights, receives two epochs on 21,861 LIBERO and 82,735 RoboInter-DROID questions, then one additional LIBERO epoch. The LIBERO-only and RoboInter-only starts each receive two epochs on their source.</p></div>
+<div class="step"><h3>During action training</h3><p>The action-only condition freezes the VLM and trains the expert plus state, action and time projections. Joint tuning also updates action-connected visual, language and connector parameters. Unused output layers are outside the action-loss path. The action weights have the same seed-0 initialization across the LIBERO arms.</p></div></div>
+<h3>What the comparison controls</h3>
+<p>The action dataset is fixed at 1,693 demonstrations and 273,465 frames. Each optimizer update aggregates four microbatches of 16. Within a tuning scope, the initial VLM varies while architecture, action initialization, training seed and evaluation protocol are matched. Across scopes, learning-rate schedules also differ. Extra VQA stages change both source composition and training exposure.</p>
+<h3>Research contributions and inherited methods</h3>
+<p>SmolVLA supplies the architecture, LeRobot the training infrastructure and LIBERO the simulator and task definitions. We assembled the grounding data, constructed matched policy starts, ran the comparisons, captured attention from trained checkpoints and collected paired camera and action data at the physical workcell.</p>
+<p class="sources">Evidence · September 22 meeting, pp. 4–15; <code>method.json</code>, <code>simulation.json</code> and <code>libero-configs.csv</code> in the companion evidence directory. Primary sources [1–3] appear on p. 10.</p>
+<footer class="folio"><span>SmolVLA · Design and controls</span><b>02 / 10</b></footer></section>
+
+<section class="sheet" id="results">
+<header class="running"><strong>SIMULATED MANIPULATION</strong><span>LIBERO · 40 tasks</span></header>
+<p class="kicker">02 &nbsp; / &nbsp; Main result</p><h2>The ordering changes during joint tuning</h2>
+<p class="deck">The mixed VQA start outperformed Base at every measured checkpoint with a frozen VLM. Under joint tuning, the Base start overtook it by 8k.</p>
+<figure class="chart"><img src="../site/assets/libero-curves.svg" alt="Base and mixed VQA LIBERO success rates at 4k, 8k and 12k under frozen and joint tuning."><figcaption><b>Figure 1.</b> Base and Mixed + LIBERO on the same action demonstrations. Each marker aggregates one 2,000-rollout evaluation. Lines connect the three measured checkpoints.</figcaption></figure>
+<p class="tcaption"><b>Table 1.</b> Aggregate task success (%). All six configurations were evaluated at each checkpoint.</p>
+<table aria-label="LIBERO aggregate task success"><thead><tr><th>VLA update scope</th><th>VLM start</th><th class="num">4k</th><th class="num">8k</th><th class="num">12k</th></tr></thead><tbody>
+<tr><td>Frozen VLM</td><td>Base</td><td class="num">51.65</td><td class="num">72.45</td><td class="num">74.05</td></tr>
+<tr><td>Frozen VLM</td><td>Mixed + LIBERO</td><td class="num">60.00</td><td class="num"><b>80.75</b></td><td class="num"><b>81.25</b></td></tr>
+<tr><td>Frozen VLM</td><td>LIBERO only</td><td class="num"><b>62.00</b></td><td class="num">78.30</td><td class="num">76.75</td></tr>
+<tr><td>Frozen VLM</td><td>RoboInter only</td><td class="num">59.75</td><td class="num">78.90</td><td class="num">78.90</td></tr>
+<tr class="rule"><td>Joint VLM + action</td><td>Base</td><td class="num">60.35</td><td class="num"><b>84.05</b></td><td class="num"><b>85.75</b></td></tr>
+<tr><td>Joint VLM + action</td><td>Mixed + LIBERO</td><td class="num"><b>81.55</b></td><td class="num">82.00</td><td class="num">81.55</td></tr></tbody></table>
+<h3>What counts as success?</h3>
+<p>We evaluated 10 tasks in each of Spatial, Object, Goal and Long with 50 episodes per task. LIBERO checks goal predicates after each environment step. Each episode contributes one binary outcome. With batch size 10, one action executed per policy inference and matched initial-state settings, the matrix comprises 36,000 scored rollouts.</p>
+<p>At 12k, mixed VQA added 144 successes over Base in the frozen condition (1,625 versus 1,481). Under joint tuning its 4k lead of 21.20 percentage points became a 12k deficit of 4.20 points (1,631 versus 1,715). Both rows of this latter comparison jointly tuned the VLM and action side.</p>
+<p class="sources">Evidence · <code>libero.csv</code> contains the success counts and denominators. <code>libero-configs.csv</code> identifies the saved training configurations; <code>simulation-sources.json</code> maps source files to hashes.</p>
+<footer class="folio"><span>SmolVLA · Evaluation checkpoints are optimizer updates</span><b>03 / 10</b></footer></section>
+
+<section class="sheet" id="behavior">
+<header class="running"><strong>TASK-LEVEL ANALYSIS</strong><span>LIBERO · where the gap occurs</span></header>
+<p class="kicker">03 &nbsp; / &nbsp; Benchmark composition</p><h2>Long accounts for 60 of the 84 extra successes</h2>
+<p>At 12k, 419/500 Long episodes succeeded with the joint Base policy and 359/500 with the joint mixed policy. Long (LIBERO-10) combines several manipulations in one instruction. Its contribution to the aggregate gap is large, although the direction varies across its individual tasks.</p>
+<p class="tcaption split-top"><b>Table 2.</b> Suite success at 12k (%); 500 trials per cell. Δ is mixed minus Base, in percentage points.</p>
+<table class="dense compact"><thead><tr><th>Suite</th><th class="num">Frozen Base</th><th class="num">Frozen mixed</th><th class="num">Joint Base</th><th class="num">Joint mixed</th><th class="num">Joint Δ</th></tr></thead><tbody>
+<tr><th>Spatial</th><td class="num">80.2</td><td class="num">88.0</td><td class="num">88.6</td><td class="num">85.4</td><td class="num">−3.2</td></tr>
+<tr><th>Object</th><td class="num">79.2</td><td class="num">88.0</td><td class="num">87.6</td><td class="num">89.6</td><td class="num">+2.0</td></tr>
+<tr><th>Goal</th><td class="num">79.2</td><td class="num">80.8</td><td class="num">83.0</td><td class="num">79.4</td><td class="num">−3.6</td></tr>
+<tr><th>Long</th><td class="num">57.6</td><td class="num">68.2</td><td class="num">83.8</td><td class="num">71.8</td><td class="num"><b>−12.0</b></td></tr></tbody></table>
+<p class="split-top">For the Long instruction to place two moka pots on the stove, joint Base and mixed succeeded 31/50 and 20/50 times. For placing the black bowl in the bottom drawer and closing it, the counts were 48/50 and 50/50. The terminal goal flag does not identify the failed substep.</p>
+<div class="call"><p><b>Sensitivity to task selection.</b> Omitting each task in turn leaves 1,950 episodes per condition. The 12k mixed-minus-Base gap ranges from +6.31 to +8.21 points with a frozen VLM and −4.82 to −3.33 points with joint tuning. Omitting the entire Long suite leaves 1,500 episodes and a joint gap of −1.60 points. These ranges measure variation with benchmark composition under one training seed.</p></div>
+<h3>A recorded difference at a shared initial state</h3>
+<div class="grid2 film"><figure><img src="../site/assets/libero-start.jpg" alt="Start views of the same butter-and-basket initial state for both frozen policies."><figcaption>Start · 0.0 s</figcaption></figure><figure><img src="../site/assets/libero-end.jpg" alt="Later views of the Base rollout and the LIBERO-only rollout that reached the goal."><figcaption>Later · 13.5 s</figcaption></figure></div>
+<p class="note"><b>Figure 2.</b> Object task 6, butter into the basket, initial state 0. The frozen 4k Base policy timed out; the frozen 4k LIBERO-only policy succeeded. Across the 50 trials for this task they succeeded 21 and 47 times. The two re-recorded outcomes matched the original evaluation. The full video plays at 20 fps and holds the final frame of the policy that finishes earlier.</p>
+<p class="sources">Evidence · <code>libero-tasks.csv</code>, <code>sensitivity.csv</code>, <code>libero-video.json</code>. This illustrative pair was selected for divergent outcomes.</p>
+<footer class="folio"><span>SmolVLA · Task outcomes and a selected rollout pair</span><b>04 / 10</b></footer></section>
+<section class="sheet" id="workcell">
+<header class="running"><strong>PHYSICAL ROBOTICS</strong><span>SO-101 · demonstrations, policies and serving</span></header>
+<p class="kicker">04 &nbsp; / &nbsp; The physical workcell</p><h2>From camera frames to a served policy</h2>
+<p class="deck">The SO-101 workcell tested whether the team could capture an instructed manipulation from two viewpoints, align it with joint commands and train a policy that serves actions on the real setup.</p>
+<figure class="plate"><img src="../site/assets/so101-demonstration.jpg" alt="Two rows of real demonstration frames at zero, nine and eighteen seconds. The top row shows the worktable and the lower row shows the wrist view."><figcaption><b>Figure 3.</b> Human-operated demonstration 0. Synchronized views show the table and the approach to the red cube at 0, 9 and 18 seconds. The complete 21.13-second sequence is available in the project media at 30 fps.</figcaption></figure>
+<p>The calibrated leader–follower pair recorded 75 teleoperated demonstrations of a single instruction to pick up a red cube and place it in the basket. Each of 39,000 synchronized timesteps contains top and wrist camera images (480 × 640 pixels), a six-channel position state and a six-channel action for five arm joints and the gripper. All 75 episodes entered the real-data fit.</p>
+<h3>Four policy training records</h3>
+<table class="dense compact"><thead><tr><th>Run</th><th>Starting policy for real adaptation</th><th>Update scope</th><th class="num">Updates</th></tr></thead><tbody>
+<tr><th>Direct</th><td>Public SmolVLA base policy</td><td>Joint</td><td class="num">7,500</td></tr>
+<tr><th>Original</th><td>Original VLM branch, external 30k</td><td>Frozen VLM</td><td class="num">30,000</td></tr>
+<tr><th>Aligned</th><td>Aligned VLM branch, external 30k</td><td>Frozen VLM</td><td class="num">30,000</td></tr>
+<tr><th>Curriculum</th><td>External 15k, then 1,045 updates on former validation episodes</td><td>Joint</td><td class="num">30,000</td></tr></tbody></table>
+<p class="split-top">For Direct, 30,000 loop steps with accumulation four gave 7,500 optimizer updates at effective batch 64. All 489 Adam step counters in the saved state equal 7,500. A November 12 server log records this checkpoint handling action requests. The three later branches used effective batch 16 and different starting policies. Their training records establish completion; ranking them on hardware requires scored physical trials.</p>
+<p class="sources">Evidence · November 3 meeting, pp. 26–28; November 17 meeting, pp. 44–51; <code>real-world.json</code> links the dataset, checkpoint state, launch and server records. Slide 51 gives a matching demonstration count and update count but no checkpoint identifier.</p>
+<footer class="folio"><span>SmolVLA · Physical demonstration and deployment evidence</span><b>05 / 10</b></footer></section>
+
+<section class="sheet" id="perception">
+<header class="running"><strong>REAL-IMAGE PERCEPTION</strong><span>SO-101 imagery · external held-out groups</span></header>
+<p class="kicker">05 &nbsp; / &nbsp; Precision of visual grounding</p><h2>Coarse location is easier than a tight box</h2>
+<p>We evaluated a separate 32-layer SmolVLM2-500M on externally sourced SO-101 imagery. The corpus contained 18,721 questions on 5,792 images. The split assigned 16,112 questions to training, 1,675 to validation and 934 to test. Two collection groups formed the test set; collection groups and exact image hashes were disjoint across splits. Greedy inference allowed up to 32 new tokens.</p>
+<p class="tcaption split-top"><b>Table 3.</b> Held-out VQA agreement with model-reviewed pseudo-labels.</p>
+<table class="dense"><thead><tr><th>Question family</th><th>Criterion</th><th class="num">Correct / total</th><th class="num">Accuracy</th></tr></thead><tbody>
+<tr><th>Quadrant</th><td>Match one of four image regions</td><td class="num">197 / 243</td><td class="num">81.07%</td></tr>
+<tr><th>Relative position</th><td>Match image-coordinate direction</td><td class="num">37 / 51</td><td class="num">72.55%</td></tr>
+<tr><th>Color</th><td>Match color answer</td><td class="num">157 / 309</td><td class="num">50.81%</td></tr>
+<tr><th>Box</th><td>Intersection over union ≥ 0.50</td><td class="num">24 / 331</td><td class="num">7.25%</td></tr></tbody></table>
+<h3>How much overlap did the predicted boxes achieve?</h3>
+<p>We re-scored all 331 saved box predictions. Intersection over union (IoU) divides the overlap area by the union area of the prediction and reference. The mean was 0.161.</p>
+<div class="bars" role="img" aria-label="Box predictions meeting IoU thresholds: 104 of 331 at 0.25, 24 of 331 at 0.50, and none at 0.75.">
+<div class="bar"><span>IoU ≥ 0.25</span><div class="track"><div class="fill" style="width:31.42%"></div></div><b class="num">104 / 331</b></div>
+<div class="bar"><span>IoU ≥ 0.50</span><div class="track"><div class="fill" style="width:7.25%"></div></div><b class="num">24 / 331</b></div>
+<div class="bar"><span>IoU ≥ 0.75</span><div class="track"><div class="fill" style="width:0"></div></div><b class="num">0 / 331</b></div></div>
+<p>At the 0.50 threshold, 23/250 object-box questions and just 1/81 instruction-target-box questions passed. This narrows the measured difficulty to precision on the image task. Connecting it to grasp errors would require trial-linked image and action records.</p>
+<div class="call"><p><b>Separate curriculum validation.</b> On the same 1,675 validation questions before training and at selected epoch 4, a scorer that also accepts semantic answers in longer replies raised quadrant counts from 126/392 to 287/392 and relation counts from 47/96 to 82/96. Valid output format rose from 73/1,675 to 1,674/1,675. This split was used for model selection.</p></div>
+<h3>Physical collection targets as of November 23</h3>
+<table class="dense compact"><thead><tr><th>Instructed task</th><th>Simple · two blocks</th><th>Hard · three blocks</th></tr></thead><tbody><tr><th>Pick specified color into a basket</th><td>150–200 demos</td><td>About 250 demos</td></tr><tr><th>Stack the instructed blocks</th><td>150–200 demos</td><td>About 250 demos</td></tr></tbody></table>
+<p class="note split-top">Collection is ongoing. Completed counts by condition and any overlap with the prepared 75 episodes are unverified. Autonomous success additionally needs a checkpoint, a trial denominator and a goal criterion for each condition.</p>
+<p class="sources">Evidence · <code>real-world.json</code>, <code>real-box-pairs.csv</code>, <code>real-box-thresholds.csv</code> and November 17 meeting, pp. 49–50. The companion code recomputes all IoU counts on CPU.</p>
+<footer class="folio"><span>SmolVLA · Real-image VQA and hardware collection targets</span><b>06 / 10</b></footer></section>
+
+<section class="sheet" id="attention">
+<header class="running"><strong>MODEL DIAGNOSTICS</strong><span>Post-softmax attention</span></header>
+<p class="kicker">06 &nbsp; / &nbsp; Inside an action prediction</p><h2>Where does an action query place its weight?</h2>
+<p>SmolVLA’s published Table 6 compares all-cross-attention (CA), all-causal-self-attention (SA) and alternating CA/SA architectures; the reported LIBERO averages are 79.0%, 74.5% and 85.5% [1]. We probed the alternating layers in two 8k policies using the same recorded two-mug manipulation.</p>
+<figure class="attn"><img src="../site/assets/attention-map.png" alt="Two camera views and their shared-scale attention overlays for the Base and mixed frozen policies in adjacent SA and CA layers."><figcaption><b>Figure 4.</b> Episode 0, frame 70. For the first action query, each camera contributes an 8 × 8 visual-token grid. The shown SA layer 14 and CA layer 15 use a common absolute scale. Each map averages 15 heads and ten denoising steps.</figcaption></figure>
+<p class="tcaption"><b>Table 4.</b> Mean weight (%) by key group, summed after the masked softmax over keys. Rounded values may differ from 100 in total.</p>
+<table class="dense"><thead><tr><th>Frozen VLM, 8k</th><th>Layer type</th><th class="num">Images</th><th class="num">Language</th><th class="num">State</th><th class="num">Action</th></tr></thead><tbody>
+<tr><th>Base</th><td>SA</td><td class="num">46.7</td><td class="num">20.2</td><td class="num">3.8</td><td class="num">29.4</td></tr><tr><th>Base</th><td>CA</td><td class="num">54.9</td><td class="num">36.6</td><td class="num">8.4</td><td class="num">0.0</td></tr>
+<tr class="rule"><th>Mixed + LIBERO</th><td>SA</td><td class="num">50.0</td><td class="num">19.5</td><td class="num">3.7</td><td class="num">26.9</td></tr><tr><th>Mixed + LIBERO</th><td>CA</td><td class="num">60.3</td><td class="num">34.7</td><td class="num">5.0</td><td class="num">0.0</td></tr></tbody></table>
+<h3>Query position changes the available keys</h3>
+<p>In SA an action query can see prefix tokens as well as itself and earlier action tokens. In Base SA, action mass rose from 3.4% at the first query to 45.4% at the last. Averaged over queries, the two images together received more weight than action keys in both policies. CA assigned zero mass to action keys because its key set contains only the conditioning prefix.</p>
+<p>Table 4 averages frames 20, 70 and 120 of a single demonstration, eight layers per type, 15 heads, ten denoising steps and 50 queries. At frozen 8k the mixed model combined greater mean image mass on this episode with higher aggregate task success. Attention weights omit the contribution of value vectors, and this episode has no rollout labels. These recordings cannot identify the cause of the joint 12k reversal or the published ablation results.</p>
+<p class="sources">Evidence · <code>attention.csv</code>, <code>attention-layers.csv</code> and <code>figure-attribution.txt</code>. The capture checks normalization and uninstrumented action agreement on frame 20.</p>
+<footer class="folio"><span>SmolVLA · One recorded episode, two matched checkpoints</span><b>07 / 10</b></footer></section>
+
+<section class="sheet" id="pro">
+<header class="running"><strong>BENCHMARK EXTENSION</strong><span>LIBERO-Pro 2.0</span></header>
+<p class="kicker">07 &nbsp; / &nbsp; Variation and scale</p><h2>Grounding under changed scene conditions</h2>
+<p class="deck">Pro extends the question across many more benchmark conditions. Its visual questions, policy-training frames and scored rollouts each count a different unit.</p>
+<table><thead><tr><th>Policy-training source</th><th class="num">Episodes</th><th class="num">Observation frames</th></tr></thead><tbody><tr><th>Original LIBERO</th><td class="num">1,693</td><td class="num">273,465</td></tr><tr><th>Pro 2.0 public video conversion</th><td class="num">37,396</td><td class="num">8,227,242</td></tr><tr><th>Pro condition-wise selection</th><td class="num">18,751</td><td class="num">4,115,692</td></tr></tbody></table>
+<p class="note split-top">Table 5. Selecting approximately half of the episodes within conditions still leaves 15.1 times as many policy-training frames as original LIBERO. The adapter restores the native camera orientation and converts the end-effector quaternion to axis–angle for an eight-channel state.</p>
+<h3>From an episode to a grounded question</h3>
+<div class="grid3"><div class="step"><b>Sample</b><p>Draw temporal frames within recorded episodes. Keep the original 128-pixel agent-view RGB as the image source.</p></div><div class="step"><b>Replay</b><p>Replay logged actions in MuJoCo. Compare rendered RGB to the recording at whole-frame and object-region scales before accepting instance masks.</p></div><div class="step"><b>Label</b><p>Derive visible boxes and directions between their centers. Check for duplicate images and cross-split task and episode overlap.</p></div></div>
+<p class="split-top">From 7,978 episodes and 15,534 images, we retained 30,597 box questions and 29,403 relation questions. The 60,000 examples split into 43,939 training, 11,478 validation and 4,583 test questions. Answer-only VLM tuning completed 2,748 optimizer updates across two epochs. Enlarging a 128-pixel observation to 512 pixels limits the spatial precision available to the model.</p>
+<div class="call warm"><p><b>Independent reconstruction check.</b> All 60,000 question/answer pairs were rebuilt from the accepted geometry index. For one available native HDF5 scene, the resized image hash and four messages matched. Fresh OSMesa replay of that S13 frame passed the whole-frame gate, while one object region produced mean error 6.74 (limit 5) and 95th-percentile error 25.85 (limit 25). Its fresh regional alignment remains unresolved.</p></div>
+<h3>Checkpoints available for evaluation</h3>
+<p>We verified saved 90k checkpoints for frozen Base, frozen Pro-VQA and joint Base. The first scored rollout logs are for the 30k checkpoints of the two Base branches. The following page reports the measured outcomes and their coverage as of 17:08 KST on November 23.</p>
+<p class="sources">Evidence · <code>simulation.json</code>, <code>simulation-sources.json</code>; the public video conversion and native HDF5 are distinct sources [4]. The code README records replay thresholds, asset revisions and completion checks.</p>
+<footer class="folio"><span>SmolVLA · Pro 2.0 outputs as of the evidence snapshot</span><b>08 / 10</b></footer></section>
+
+<section class="sheet" id="pro-trials">
+<header class="running"><strong>PRO 2.0 EVALUATION</strong><span>30k Base policies · interim results</span></header>
+<p class="kicker">08 &nbsp; / &nbsp; Scored policy rollouts</p><h2>Few successes on shared Pro trials</h2>
+<p class="deck">Of 1,936 trial IDs evaluated under both training scopes, the frozen-VLM policy succeeded on three (0.15%) and the jointly tuned policy on two (0.10%).</p>
+<p>Both policies started from the Base VLM. The 18,751 selected training episodes cover 32 suite/task pairs. The official test split covers eight different base tasks and their variants. Each of the 339 test cases receives ten repeats, giving 3,390 planned rollouts per checkpoint. We matched outcomes by suite, task, variation and repeat. Each repeat sets the environment seed and initial-state index, and each trial ID seeds the policy noise. The simulator supplies a binary success flag for each finished rollout.</p>
+<p class="tcaption split-top"><b>Table 6.</b> Saved successes / scored rollouts at 17:08 KST, November 23, 2026. The official budget is the number of planned trials per policy.</p>
+<table class="dense" aria-label="Pro 2.0 Base policy results at the 30k checkpoint"><thead><tr><th>Suite</th><th class="num">Official budget</th><th class="num">Frozen VLM</th><th class="num">Joint VLA</th></tr></thead><tbody>
+<tr><th>Long</th><td class="num">840</td><td class="num">0 / 840</td><td class="num">0 / 840</td></tr>
+<tr><th>Goal</th><td class="num">850</td><td class="num">0 / 850</td><td class="num">1 / 850</td></tr>
+<tr><th>Object</th><td class="num">860</td><td class="num">7 / 860</td><td class="num">1 / 246</td></tr>
+<tr><th>Spatial</th><td class="num">840</td><td class="num">0 / 442</td><td class="num">—</td></tr>
+<tr class="rule"><th>All saved</th><td class="num">3,390</td><td class="num"><b>7 / 2,992</b></td><td class="num"><b>2 / 1,936</b></td></tr></tbody></table>
+<p class="note split-top">A dash denotes zero saved trials. Long and Goal each have complete coverage for both policies. Frozen Base also completed Object. The two column totals cover different trial sets.</p>
+<h3>Comparison on identical trial IDs</h3>
+<p>The shared set contains all 840 Long and 850 Goal trials, the same 246 Object trials and no Spatial trials. All three frozen-policy successes in this set occurred on Object. The joint policy succeeded once each on Goal and Object. The policies succeeded on different trials, leaving 1,931 trials where both failed.</p>
+<div class="call"><p>Only one success separates these models on the shared trials. The shared set follows benchmark order and omits Spatial entirely. These observations establish a low success count on the covered held-out tasks. They leave the cause of failures and the final model ranking open. Measuring the effect of Pro VQA training requires scored rollouts for a Pro-VQA checkpoint.</p></div>
+<p class="sources">Evidence · <code>pro-30k-trials.csv</code> records per-ID results, including missing outcomes. <code>pro-30k.json</code> records coverage and snapshot provenance. The count uses scored rows from the two 30k Base evaluations.</p>
+<footer class="folio"><span>SmolVLA · Partial Pro results as of 17:08 KST, November 23</span><b>09 / 10</b></footer></section>
+
+<section class="sheet" id="evidence">
+<header class="running"><strong>INTERPRETATION AND REPRODUCIBILITY</strong><span>Sources and evaluation boundaries</span></header>
+<p class="kicker">09 &nbsp; / &nbsp; Discussion</p><h2>What the available measurements support</h2>
+<p>Across the six original LIBERO conditions, VQA initialization changed both early learning and the ordering at 12k. The sign of the final mixed-minus-Base difference survived every single-task omission within each tuning scope. Its magnitude depended particularly on Long. The single seed, differing learning-rate schedules across scopes, and additional exposure in the mixed regimen limit attribution to any one visual skill.</p>
+<p>Physical SO-101 records establish a complete path from synchronized demonstrations to trained checkpoints and a served action request. The external real-image test identifies precision as a weakness under reviewed pseudo-labels. Measuring downstream effects on the four physical conditions requires tagged autonomous trials with successes, denominators and a common rubric. Both 30k Pro Base checkpoints recorded very few successes on the shared trials. Complete official coverage is still needed to characterize full-benchmark performance.</p>
+<h3>Historical checkpoints have separate protocols</h3>
+<p>A previous 100k pilot scored 308/400 (77.00%) with the action side trained and 309/400 (77.25%) with full tuning. A separate action-only 100k evaluation scored 1,494/2,000 (74.70%); a different full 15k initialization scored 1,682/2,000 (84.10%). Their evaluation or training conditions differ from the controlled runs on p. 3.</p>
+<h3>Reproducing the evidence</h3>
+<dl class="approach"><dt>Local CPU analysis</dt><dd>The companion code ships task-level numerical counts, 331 anonymized predicted/reference box pairs and attention-figure inputs. It can regenerate the leave-one-task/suite-out table, IoU re-scores and published figures.</dd>
+<dt>Model experiments</dt><dd>The training and evaluation recipes specify software and data revisions, commands, conditioning inputs and update scope. Full replay requires source archives, simulator assets, GPUs and matching VLM/starting policy exports for each arm. Real data and calibrated hardware are additional dependencies for physical reproduction.</dd>
+<dt>Records and media</dt><dd>Printed evidence filenames refer to <code>site/evidence/</code> in the release. The source recordings for Figs. 2 and 3 appear as <code>assets/libero-comparison.mp4</code> and <code>assets/so101-demo.mp4</code> on the project page. The team's September 22, November 3 and November 17 meeting records supply design and physical setup evidence.</dd></dl>
+<h3>Primary references and credits</h3>
+<ol class="ref">
+<li><a href="https://arxiv.org/abs/2506.01844">SmolVLA: A Vision-Language-Action Model for Affordable and Efficient Robotics</a> (2025). See Table 6 for the published attention architecture ablation.</li>
+<li>Liu, Zhu, Gao, Feng, Liu, Zhu &amp; Stone (2023). <a href="https://arxiv.org/abs/2306.03310">LIBERO: Benchmarking Knowledge Transfer for Lifelong Robot Learning</a>. The <a href="https://github.com/Lifelong-Robot-Learning/LIBERO#license">original dataset</a> credits CC BY 4.0. The <a href="https://huggingface.co/datasets/HuggingFaceVLA/libero">LeRobot conversion</a> lists Apache 2.0. Figure 4 uses two views from one demonstration with our attention overlays.</li>
+<li><a href="https://github.com/huggingface/lerobot">Hugging Face LeRobot</a> and the <a href="https://huggingface.co/lerobot/smolvla_base">public SmolVLA policy</a>. The release lists exact revisions, local changes, redistribution notices and figure credits.</li>
+<li><a href="https://github.com/LIBERO-Pro-Team/LIBERO-Pro2.0">LIBERO-Pro 2.0</a>, <a href="https://huggingface.co/datasets/zhouxueyang/LIBERO-Pro2.0-Train">native training archive</a> and <a href="https://huggingface.co/datasets/phicoltan/libero_pro2">public video conversion</a>. Workcell photography, teleoperation clips and the paired simulator recording are team experimental materials.</li></ol>
+<footer class="folio"><span>SmolVLA · End of report</span><b>10 / 10</b></footer></section>
+</article></body></html>

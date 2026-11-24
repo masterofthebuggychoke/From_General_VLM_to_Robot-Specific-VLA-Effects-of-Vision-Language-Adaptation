@@ -1,0 +1,9 @@
+evidence_id,experiment,group,updates,successes,episodes,percent,source
+H-1,SmolVLA full 15k,LIBERO,15000,1682,2000,84.1,outputs/libero_vlm_ablation_12k_20261113/eval_smolvla_full_015000/eval_info.json
+H-2,SmolVLA full historical,LIBERO,100000,309,400,77.25,outputs/smolvla_libero_full_seed0_eval/eval_info.json
+H-3,SmolVLA expert historical,LIBERO,100000,308,400,77.0,outputs/smolvla_libero_baseline_seed0_eval/eval_info.json
+H-4,VLA-0-Smol historical,LIBERO,100000,383,400,95.75,outputs/vla0_smol_libero_seed0_eval/eval_info.json
+H-5,SmolVLA expert paired historical,libero,50000,1489,2000,74.45,outputs/smolvla_paired_50k_100k_20261029/results/overall.json
+H-6,SmolVLA expert paired historical,libero,100000,1494,2000,74.7,outputs/smolvla_paired_50k_100k_20261029/results/overall.json
+H-7,SmolVLA expert paired historical,libero_plus,50000,218,2000,10.9,outputs/smolvla_paired_50k_100k_20261029/results/overall.json
+H-8,SmolVLA expert paired historical,libero_plus,100000,214,2000,10.7,outputs/smolvla_paired_50k_100k_20261029/results/overall.json

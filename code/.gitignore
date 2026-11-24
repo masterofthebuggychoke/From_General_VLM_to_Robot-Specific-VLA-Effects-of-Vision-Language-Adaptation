@@ -1,0 +1,8 @@
+.venv/
+.cache/
+deps/
+assets/
+runs/
+figures/
+__pycache__/
+*.pyc

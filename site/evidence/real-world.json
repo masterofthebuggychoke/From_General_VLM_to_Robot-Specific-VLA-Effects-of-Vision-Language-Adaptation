@@ -1,0 +1,640 @@
+{
+  "meeting_materials": [
+    {
+      "source": "meeting_0922",
+      "pages": "4–7, 8–15, 25, 34–37",
+      "content": "The team motivated visual-language adaptation by the dependence of action data on the robot and sensors. It proposed grounding tasks, parallel LIBERO and SO-101 studies, and leader–follower demonstration collection."
+    },
+    {
+      "source": "meeting_1103",
+      "pages": "23, 26–28",
+      "content": "The team reported an earlier 400-rollout LIBERO evaluation and documented assembly, calibration, and teleoperation of the SO-101."
+    },
+    {
+      "source": "meeting_1117",
+      "pages": "44–48, 49–51",
+      "content": "Pages 44–48 document the equipment and teleoperation checks. Pages 49–50 give success examples for color-specified pick-and-place and instructed block stacking. Both tasks use two blocks in Simple and three in Hard. Page 51 shows a pick-and-place rollout labeled with 75 demonstrations and 7,500 training steps."
+    }
+  ],
+  "real_demonstrations": {
+    "dataset": "DONGDA/pick_and_place_real_merged",
+    "task_instructions": {
+      "Pick up a red cube and place it at the basket.": 75
+    },
+    "episodes": 75,
+    "observation_timesteps": 39000,
+    "fps": 30,
+    "image_shape_height_width_channels": [
+      480,
+      640,
+      3
+    ],
+    "camera_streams": [
+      "top",
+      "wrist"
+    ],
+    "state_and_action_shape": [
+      6
+    ],
+    "joint_position_channel_names": [
+      "shoulder_pan.pos",
+      "shoulder_lift.pos",
+      "elbow_flex.pos",
+      "wrist_flex.pos",
+      "wrist_roll.pos",
+      "gripper.pos"
+    ],
+    "split": {
+      "training_episodes": 75,
+      "validation_episodes": 0
+    },
+    "boundary_decode_audit": {
+      "status": "passed",
+      "episodes": 75,
+      "frames": 39000,
+      "boundary_samples": 150,
+      "decoded_camera_frames": 300,
+      "train_episodes": 75,
+      "validation_episodes": 0
+    },
+    "sources": [
+      "real_info",
+      "real_manifest",
+      "real_validation"
+    ]
+  },
+  "physical_collection_status": {
+    "status_date": "2026-11-23",
+    "evidence": "Progress update supplied directly by the research team on November 23, 2026.",
+    "status": "Collection in progress",
+    "unit": "demonstration episodes",
+    "goal_per_condition": {
+      "pick_and_place_simple": "150–200",
+      "pick_and_place_hard": "approximately 250",
+      "stack_simple": "150–200",
+      "stack_hard": "approximately 250"
+    },
+    "current_completed_counts_per_condition": null,
+    "relationship_to_prepared_75": "The team has not established whether the earlier 75 demonstrations count toward any of these four targets.",
+    "condition_definitions_source": "meeting_1117 pp. 49–50"
+  },
+  "physical_rollout": {
+    "task": "Pick up the designated block and place it in the basket.",
+    "slide_reported_demonstrations": 75,
+    "slide_reported_training_steps": 7500,
+    "source": "meeting_1117 p. 51",
+    "scored_trials_in_supplied_csv": 0,
+    "success_count": null,
+    "trial_count": null,
+    "operational_rubric": null,
+    "checkpoint_identity": null,
+    "observed_scope": "The slide documents a rollout and its reported training scale. Estimating autonomous success rates by condition or generalization to new conditions requires scored trials.",
+    "sources": [
+      "meeting_1117",
+      "physical_trials",
+      "physical_protocol"
+    ],
+    "documented_still_asset": "assets/so101-rollout-record.jpg"
+  },
+  "completed_real_policy_training": {
+    "policies": [
+      {
+        "name": "original",
+        "vlm_frozen": true,
+        "real_data_optimizer_updates": 30000,
+        "batch_size": 16,
+        "seed": 0,
+        "initial_policy_checkpoint": "outputs/so101_smolvla_1000_train/checkpoints/030000/pretrained_model",
+        "sources": [
+          "original_job",
+          "original_checkpoint",
+          "real_manifest"
+        ]
+      },
+      {
+        "name": "aligned",
+        "vlm_frozen": true,
+        "real_data_optimizer_updates": 30000,
+        "batch_size": 16,
+        "seed": 0,
+        "initial_policy_checkpoint": "outputs/so101_three_vla_20261110/aligned_external/checkpoints/030000/pretrained_model",
+        "sources": [
+          "aligned_job",
+          "aligned_checkpoint",
+          "real_manifest"
+        ]
+      },
+      {
+        "name": "curriculum",
+        "vlm_frozen": false,
+        "real_data_optimizer_updates": 30000,
+        "batch_size": 16,
+        "seed": 0,
+        "initial_policy_checkpoint": "outputs/so101_vlm_curriculum_20261110/validation_adapt/external100/checkpoints/001045/pretrained_model",
+        "sources": [
+          "curriculum_job",
+          "curriculum_checkpoint",
+          "real_manifest"
+        ]
+      }
+    ],
+    "comparison_scope": "Each branch completed 30,000 real-data optimizer updates. The external-data training stages, initialization, and module-freezing choices differ across branches. The slide does not identify the policy behind the 7,500-step rollout. Scored physical trials are unavailable for ranking these policies.",
+    "external_pretraining_original_split": {
+      "train_episodes": 900,
+      "validation_episodes": 100,
+      "train_frames": 603087,
+      "validation_frames": 66873,
+      "sources": [
+        "external_manifest"
+      ]
+    },
+    "curriculum_split_note": "The curriculum branch trained on 100 external episodes that had served as validation data in an earlier branch. Scores on those episodes cannot provide independent evaluation of the subsequent adaptation.",
+    "sources": [
+      "physical_protocol",
+      "curriculum_branch"
+    ]
+  },
+  "external_real_image_vlm_test": {
+    "model": "SmolVLM2-500M, 32 language layers, stage2/best",
+    "test_groups": 2,
+    "split_counts": {
+      "train": 16112,
+      "validation": 1675,
+      "test": 934
+    },
+    "total_questions": 18721,
+    "unique_images": 5792,
+    "collection_group_overlap_across_splits": false,
+    "image_hash_overlap_across_splits": false,
+    "inference": {
+      "greedy": true,
+      "max_new_tokens": 32
+    },
+    "accuracy_by_family": {
+      "bbox": {
+        "correct": 24,
+        "total": 331,
+        "accuracy": 0.07250755287009064
+      },
+      "color": {
+        "correct": 157,
+        "total": 309,
+        "accuracy": 0.5080906148867314
+      },
+      "quadrant": {
+        "correct": 197,
+        "total": 243,
+        "accuracy": 0.8106995884773662
+      },
+      "relative_position": {
+        "correct": 37,
+        "total": 51,
+        "accuracy": 0.7254901960784313
+      }
+    },
+    "macro_accuracy": 0.5291969880781549,
+    "bbox_mean_iou": 0.16074451865534078,
+    "bbox_accuracy_at_iou_075": 0.0,
+    "correctness": "For boxes, IoU ≥ 0.5 between the predicted and reference boxes counts as correct. For categorical items, the trimmed, lowercase short answer must match the reference. Macro accuracy is the unweighted mean across the four question families.",
+    "reference_labels": "Sol-reviewed pseudo-labels, not human ground truth",
+    "scope": "This is an offline VQA test on external SO-101 images using the 32-layer stage-2 VLM. The physical arm trials and the aligned_real policy, which incorporates 16 language layers, are separate experiments.",
+    "sources": [
+      "vlm_manifest",
+      "vlm_training",
+      "vlm_test",
+      "vlm_metric"
+    ],
+    "threshold_reanalysis": {
+      "scope": "CPU re-scoring of all 331 saved box predictions.",
+      "input_kind_0": "object_bbox",
+      "input_kind_1": "target_bbox",
+      "coordinates": "Normalized [x1, y1, x2, y2] coordinates on a 0–1000 grid. Each box has positive area. IoU divides the intersection area by the union area.",
+      "thresholds_inclusive": [
+        0.25,
+        0.5,
+        0.75
+      ],
+      "source_evaluation": "vlm_test",
+      "files": {
+        "numeric_pairs": {
+          "release_path": "site/evidence/real-box-pairs.csv",
+          "sha256": "e532816261111c84892bcd64e3c6c68236131ad77abb3ef5d3b4550ef8389655"
+        },
+        "threshold_summary": {
+          "release_path": "site/evidence/real-box-thresholds.csv",
+          "sha256": "24bf21508c4e6fa29849e40b77019f4e17412c5587579d00a0baa5a325c4b09f"
+        },
+        "rerun_script": {
+          "release_path": "editorial/score_boxes.py",
+          "sha256": "ca2453344bf1d36877b064e66191fff87936f0ece07b4fd4409e2c522b8369aa"
+        }
+      },
+      "roundtrip_validation": "The public numeric CSV contains each question type and the eight predicted/reference coordinates. Re-scoring it produced a summary byte-for-byte identical to the summary obtained from the original prediction JSON."
+    }
+  },
+  "figures": [
+    {
+      "asset": "assets/so101-workcell.jpg",
+      "sha256": "1ed054670cb1c24c6cde0424dce9f78867bd7af84434b88d868577d47b942f93",
+      "dimensions_px": [
+        640,
+        480
+      ],
+      "source_episode_index": 0,
+      "source_frame_indices": [
+        90
+      ],
+      "episode_seconds": [
+        3
+      ],
+      "cameras": [
+        "top"
+      ],
+      "kind": "RGB frames from a human teleoperation demonstration recorded by the team.",
+      "sources": [
+        "real_info",
+        "real_manifest",
+        "episode0_video_top"
+      ]
+    },
+    {
+      "asset": "assets/so101-demonstration.jpg",
+      "sha256": "7bfb5041b36f1f21f2d0d74c586930ee93935f11f52014452c18c760e0691d09",
+      "dimensions_px": [
+        1676,
+        856
+      ],
+      "source_episode_index": 0,
+      "source_frame_indices": [
+        0,
+        270,
+        540
+      ],
+      "episode_seconds": [
+        0,
+        9,
+        18
+      ],
+      "cameras": [
+        "top",
+        "wrist"
+      ],
+      "kind": "RGB frames from a human teleoperation demonstration recorded by the team.",
+      "sources": [
+        "real_info",
+        "real_manifest",
+        "episode0_video_top",
+        "episode0_video_wrist"
+      ],
+      "display": "Columns show elapsed time within episode 0. Rows show the synchronized overhead and wrist views."
+    },
+    {
+      "asset": "assets/so101-rollout-record.jpg",
+      "kind": "Still published under “Pick-and-Place Rollout” in the team’s November 17 meeting deck.",
+      "source_page": 51,
+      "pdf_image_object": 218,
+      "embedded_source_jpeg_sha256": "935aed04bd7aeebeee7652203bba1a3760afb78e5778ffa2536815f469595aae",
+      "sha256": "01c5bb46fc5ef78984d47046d5e472c4d48208ed4182a3466eab271b21830635",
+      "dimensions_px": [
+        1280,
+        720
+      ],
+      "processing": "Only APP1 EXIF metadata was removed from the JPEG embedded in the PDF. The distributed image has the same dimensions and decoded RGB pixels as the embedded source.",
+      "observed": "An external view shows the SO-101 arm and its purple gripper near the basket. A red block is visible on the white work surface.",
+      "caption_evidence": "Page 51 labels this image “Pick-and-Place Rollout” and reports 75 demonstrations and 7,500 training steps.",
+      "interpretation_limit": "A single frame does not establish the sequence of actions, grasp success, or a success count. The slide gives no checkpoint identifier.",
+      "sources": [
+        "meeting_1117"
+      ]
+    }
+  ],
+  "sources": {
+    "meeting_0922": {
+      "workspace_relative_source": "캡스톤디자인_미팅자료_0922.pdf",
+      "sha256": "c79ce45c7e0e99f968a722bd8701d1c54076226cfe0f292a6038b3a541dd9145"
+    },
+    "meeting_1103": {
+      "workspace_relative_source": "캡스톤디자인_미팅자료_1103.pdf",
+      "sha256": "faa65373e247ae4a415467452a099c9138e6ea876f5f2dc551a6f2339548e6ac"
+    },
+    "meeting_1117": {
+      "workspace_relative_source": "캡스톤디자인_미팅자료_1117.pdf",
+      "sha256": "c2b22b36c2259e805b16606b462adbbd6d86e02a7dd7bb29f9a2accd2c7eed11"
+    },
+    "real_manifest": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/real_data/prepared.json",
+      "sha256": "52e9b64c758fb1184c5fd18fad6f5e7ade1c8d5f736af521d499d30d454f7511"
+    },
+    "real_info": {
+      "workspace_relative_source": ".hf-cache/lerobot/DONGDA/pick_and_place_real_merged/meta/info.json",
+      "sha256": "fcdcf70212719fd56cd742bebedd54cc02d3f5957a765a4831bcbf71b38ddeb9"
+    },
+    "real_validation": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/control/real_data_validation.json",
+      "sha256": "c05260da8547d6745aa363d6c7f7a10a8240f2815aaf6fa3f53a435f19b132ba"
+    },
+    "vlm_test": {
+      "workspace_relative_source": "outputs/so101_vlm_smolvlm2_500m_20261108/runs/stage2/best/test_evaluation.json",
+      "sha256": "34c1c62f293a3839208c0e076d321fc3292fc4bf50844c3117b16f2516ea3fc6"
+    },
+    "vlm_manifest": {
+      "workspace_relative_source": "outputs/so101_vlm_smolvlm2_500m_20261108/manifest.json",
+      "sha256": "d2510739e0aad565c4565efedbf9586b6e71cb44969b9662aea5240f625b0300"
+    },
+    "vlm_training": {
+      "workspace_relative_source": "outputs/so101_vlm_smolvlm2_500m_20261108/training_config.json",
+      "sha256": "07b220adf0d8d116e42398a61bad163f4b26a3268cc61934537bbf7372843ee8"
+    },
+    "vlm_metric": {
+      "workspace_relative_source": "experiments/so101_vlm/smol_sft_metrics.py",
+      "sha256": "79ee96f1b3a2241457c4f5068d506ef3002e18a546a505d25c717cba1b2cccfb"
+    },
+    "physical_protocol": {
+      "workspace_relative_source": "experiments/so101_robot_test_20261111/README.md",
+      "sha256": "c14996ca42b9f69eef90d64a60cc0344a198bd9d1c5e9e8b8d4bf3fc8d94d629"
+    },
+    "external_manifest": {
+      "workspace_relative_source": "outputs/so101_smolvla_1000_data/prepared.json",
+      "sha256": "f0afbb10e94c3856e91902afcc4f6c2dccac801f2edea9353072742df4814408"
+    },
+    "curriculum_branch": {
+      "workspace_relative_source": "experiments/so101_validation_adapt_20261110/README.md",
+      "sha256": "75567da2b204c0ea687ec133dedd604376260c589c3d57484852f0efe0764834"
+    },
+    "physical_trials": {
+      "workspace_relative_source": "outputs/so101_robot_test_20261111/trials.csv",
+      "sha256": "399d3d7f5481c54039df5b42976c250b9640622918cbc76473f99e8d53509751"
+    },
+    "original_job": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/jobs/original_real.json",
+      "sha256": "6cd7c28ba18f4eac5051a0e2327b6a8a5736c9668fc79cde1875f70cf3abe758"
+    },
+    "original_checkpoint": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/original_real/checkpoints/030000/COMMITTED.json",
+      "sha256": "c8cd40a896b8f52f751a3c22a96e50101c110701a99434addcd05a0307c732c6"
+    },
+    "aligned_job": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/jobs/aligned_real.json",
+      "sha256": "c4f9593a48068f03a1f85dc8caf2c171021db77b47985568b98d06b58f8b12b9"
+    },
+    "aligned_checkpoint": {
+      "workspace_relative_source": "outputs/so101_three_vla_20261110/aligned_real/checkpoints/030000/COMMITTED.json",
+      "sha256": "48ed8f4294de35820d6cfa1a24e28525db08c7f5e0dfeb28137f0ab14e2ba893"
+    },
+    "curriculum_job": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/validation_adapt/jobs/real75.json",
+      "sha256": "3142f14c3b3a6007aba944de44247374ef29b809a55106cfe1778c0e507c5fce"
+    },
+    "curriculum_checkpoint": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/validation_adapt/real75/checkpoints/030000/COMMITTED.json",
+      "sha256": "349175d7646d9e3c8dd776a946fdef2af71e118216a3a357912c42c5859a9290"
+    },
+    "episode0_video_top": {
+      "workspace_relative_source": ".hf-cache/lerobot/DONGDA/pick_and_place_real_merged/videos/observation.images.top/chunk-000/file-000.mp4",
+      "sha256": "b9f8057aca98b48770d24528cab60b4ccf079d686393e7e67f72ef3cb651e353"
+    },
+    "episode0_video_wrist": {
+      "workspace_relative_source": ".hf-cache/lerobot/DONGDA/pick_and_place_real_merged/videos/observation.images.wrist/chunk-000/file-000.mp4",
+      "sha256": "a940700261f9028eece415b8de601ee6295cad6322a9bde2d80f6f2dc77b6144"
+    },
+    "real_full_training_config": {
+      "workspace_relative_source": "outputs/smolvla_real_20261108/train_full_7500/checkpoints/030000/pretrained_model/train_config.json",
+      "sha256": "28af3e57a26ecad9cc05d481bb322a10586630883384c0a67574a291077e99b0"
+    },
+    "real_full_training_step": {
+      "workspace_relative_source": "outputs/smolvla_real_20261108/train_full_7500/checkpoints/030000/training_state/training_step.json",
+      "sha256": "ae131b1b81b7e158fde9b47f1b413c8eed93055b49b47452d945f8cb4f836d98"
+    },
+    "real_full_launch": {
+      "workspace_relative_source": "outputs/smolvla_real_20261108/train_full.sh",
+      "sha256": "ea9644889834aed6a2a9a0596582d500777b10cdcfa3756961a8c5e12008df23"
+    },
+    "real_full_server_log": {
+      "workspace_relative_source": "outputs/smolvla_real_20261108/inference/server_30k.log",
+      "sha256": "6c0af0f0f0faad7bb45bbe9d47cf5b32717d20fd4bb1faa243136c116a05c425"
+    },
+    "real_full_adam_steps": {
+      "workspace_relative_source": "outputs/smolvla_real_20261108/train_full_7500/checkpoints/030000/training_state/optimizer_state.safetensors",
+      "safetensors_header_sha256": "cf563de1e9816ac7b1999357ef42f454f404680ed1d178fc3b8d90a9535929fd",
+      "size_bytes": 1584838556,
+      "fields_checked": "state/*/step",
+      "step_histogram": {
+        "7500": 489
+      }
+    },
+    "curriculum_vlm_baseline": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/vlm/baseline.json",
+      "sha256": "890d119c44eb16972bc28b1d6b9ae0a0ccc2549e17db2c22d1d4078640cca2b1"
+    },
+    "curriculum_vlm_epoch4": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/vlm/validation_epoch_4.json",
+      "sha256": "d6e892fac951a0afe16f46b94aa8b5bb95f4412864e54ae7dc7190b93228af6a"
+    },
+    "curriculum_vlm_manifest": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/vlm/manifest.json",
+      "sha256": "d589e821096759b1c4efec6330624024289738b0c8cd4196211bd504221803f1"
+    },
+    "curriculum_vlm_selection": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/vlm/completed.json",
+      "sha256": "b2747ad5cab1b70dbfc051c10ab7bfd0d7565e3c0ddd3b834a8bdb48383c8d5d"
+    },
+    "curriculum_vlm_config": {
+      "workspace_relative_source": "outputs/so101_vlm_curriculum_20261110/vlm/checkpoints/epoch_4/config.json",
+      "sha256": "e0b0ec8544e9b55057f34e6b4a4a3fe632d0d325403422536611e8438e378c03"
+    },
+    "curriculum_training_implementation": {
+      "workspace_relative_source": "experiments/so101_vlm_curriculum_20261110/train.py",
+      "sha256": "d5274ba09c7d2824114265bcd2e8f5bbbc9286a460b82eb864254bf2f33fddcb"
+    },
+    "curriculum_layer_freezing": {
+      "workspace_relative_source": "experiments/so101_vlm/vla_aligned_sft.py",
+      "sha256": "42324e1ffd257324f72a67538d430f57b33196357109c7913e3c82afef9b9754"
+    }
+  },
+  "video": {
+    "asset": "assets/so101-demo.mp4",
+    "source_episode_index": 0,
+    "source_frame_range_inclusive": [
+      0,
+      633
+    ],
+    "frame_count": 634,
+    "duration_seconds": 21.133333333333333,
+    "fps": 30,
+    "speed": 1.0,
+    "camera_layout": [
+      "left: top",
+      "right: wrist"
+    ],
+    "source_start_seconds_per_camera": 0.0,
+    "kind": "A human demonstrates picking up the red block and placing it in the basket. Two synchronized views show the full recorded episode.",
+    "audio_streams": 0,
+    "video_codec": "H.264",
+    "pixel_format": "yuv420p",
+    "size_bytes": 3181575,
+    "dimensions_px": [
+      1288,
+      522
+    ],
+    "sha256": "c1b5f8698e4d0cdfdc3ef2274c0fb5dfa0e76a6792c84082986a4173446d1f85",
+    "sources": [
+      "real_info",
+      "real_manifest",
+      "episode0_video_top",
+      "episode0_video_wrist"
+    ],
+    "processing": "Both views retain all 640 × 480 source pixels. A narrow header labels the cameras in English. The 8-pixel center gutter and header sit outside the source views.",
+    "poster": {
+      "asset": "assets/so101-demo-poster.jpg",
+      "time_seconds": 15,
+      "source_frame_index": 450,
+      "sha256": "bea75b119c538670910f3d2d8a0f824a267185ca347509d4d77b3b466f680827",
+      "dimensions_px": [
+        1288,
+        522
+      ]
+    }
+  },
+  "real_full_7500_training": {
+    "dataset": "DONGDA/pick_and_place_real_merged",
+    "dataset_episodes": 75,
+    "base_policy": "lerobot/smolvla_base",
+    "freeze_vision_encoder": false,
+    "train_expert_only": false,
+    "microbatch": 16,
+    "accumulation": 4,
+    "effective_batch_size": 64,
+    "training_loop_steps": 30000,
+    "verified_adam_updates": 7500,
+    "checkpoint": "train_full_7500/checkpoints/030000",
+    "verification": "All 489 Adam step counters equal 7,500. The November 12 server log records loading this checkpoint and processing action requests. The log does not contain scored physical trials.",
+    "slide_mapping": "The demonstration and optimizer-update counts match those reported on page 51 of the November 17 meeting deck. The slide provides no checkpoint identifier, so the correspondence to this exact model remains unverified.",
+    "sources": [
+      "real_info",
+      "real_full_training_config",
+      "real_full_training_step",
+      "real_full_launch",
+      "real_full_adam_steps",
+      "real_full_server_log",
+      "meeting_1117"
+    ]
+  },
+  "curriculum_vlm_validation": {
+    "model": "SmolVLM2-500M (32 language layers in validation forward pass)",
+    "trainable_components": [
+      "vision",
+      "connector",
+      "text layers 0..15"
+    ],
+    "frozen_components": [
+      "embeddings",
+      "text layers 16..31",
+      "final norm",
+      "lm_head"
+    ],
+    "vla_transfer_language_layers": 16,
+    "training_questions": 16112,
+    "bbox_fraction_by_epoch": [
+      0,
+      0,
+      0.5,
+      0.75
+    ],
+    "split": "validation",
+    "questions": 1675,
+    "collection_groups": 7,
+    "same_ids_questions_answers": true,
+    "greedy": true,
+    "max_new_tokens": 32,
+    "scoring": "0–1000 XYXY IoU ≥ 0.50 for bbox; strict trimmed, lowercase short-answer equality for categorical questions. Auxiliary semantic scoring extracts a single unambiguous label from longer answers.",
+    "per_family": {
+      "quadrant": {
+        "questions": 392,
+        "before": {
+          "strict_correct": 15,
+          "strict_accuracy": 0.03826530612244898,
+          "auxiliary_semantic_correct": 126,
+          "auxiliary_semantic_accuracy": 0.32142857142857145
+        },
+        "epoch4": {
+          "strict_correct": 287,
+          "strict_accuracy": 0.7321428571428571,
+          "auxiliary_semantic_correct": 287,
+          "auxiliary_semantic_accuracy": 0.7321428571428571
+        }
+      },
+      "bbox": {
+        "questions": 572,
+        "before": {
+          "strict_correct": 0,
+          "strict_accuracy": 0.0,
+          "auxiliary_semantic_correct": 0,
+          "auxiliary_semantic_accuracy": 0.0
+        },
+        "epoch4": {
+          "strict_correct": 33,
+          "strict_accuracy": 0.057692307692307696,
+          "auxiliary_semantic_correct": 33,
+          "auxiliary_semantic_accuracy": 0.057692307692307696
+        }
+      },
+      "color": {
+        "questions": 615,
+        "before": {
+          "strict_correct": 0,
+          "strict_accuracy": 0.0,
+          "auxiliary_semantic_correct": 217,
+          "auxiliary_semantic_accuracy": 0.35284552845528455
+        },
+        "epoch4": {
+          "strict_correct": 415,
+          "strict_accuracy": 0.6747967479674797,
+          "auxiliary_semantic_correct": 415,
+          "auxiliary_semantic_accuracy": 0.6747967479674797
+        }
+      },
+      "relative_position": {
+        "questions": 96,
+        "before": {
+          "strict_correct": 0,
+          "strict_accuracy": 0.0,
+          "auxiliary_semantic_correct": 47,
+          "auxiliary_semantic_accuracy": 0.4895833333333333
+        },
+        "epoch4": {
+          "strict_correct": 82,
+          "strict_accuracy": 0.8541666666666666,
+          "auxiliary_semantic_correct": 82,
+          "auxiliary_semantic_accuracy": 0.8541666666666666
+        }
+      }
+    },
+    "four_family_macro_before_after": [
+      0.009566326530612245,
+      0.5796996448673277
+    ],
+    "format_compliance_before_after": [
+      0.04358208955223881,
+      0.9994029850746269
+    ],
+    "valid_format_before_after": [
+      73,
+      1674
+    ],
+    "bbox_mean_iou_before_after": [
+      0.0018181188811188813,
+      0.1390724306500855
+    ],
+    "labels": "Sol-reviewed pseudo-labels, not human ground truth",
+    "interpretation_scope": "The baseline and epoch 4 were evaluated on identical validation items, and the team selected epoch 4 using validation metrics. Learning the answer format can increase strict accuracy. The separate 934-question test and autonomous physical rollouts measure different outcomes.",
+    "sources": [
+      "curriculum_vlm_baseline",
+      "curriculum_vlm_epoch4",
+      "curriculum_vlm_manifest",
+      "curriculum_vlm_selection",
+      "curriculum_vlm_config",
+      "curriculum_training_implementation",
+      "curriculum_layer_freezing"
+    ]
+  }
+}

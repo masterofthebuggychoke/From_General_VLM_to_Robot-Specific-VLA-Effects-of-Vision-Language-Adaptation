@@ -1,0 +1,13 @@
+Attention visualization inputs
+Dataset: HuggingFaceVLA/libero. Data card lists Apache License 2.0.
+Snapshot 86958911c0f959db2bbbdb107eb3e17c5f9c798e.
+https://huggingface.co/datasets/HuggingFaceVLA/libero/tree/86958911c0f959db2bbbdb107eb3e17c5f9c798e
+Source task: put the white mug on the left plate and put the yellow and white mug on the right plate.
+Changes: extracted two camera views of demonstration episode 0, frame 70. Our
+figure overlays recorded attention weights from two frozen-VLM 8k checkpoints.
+The included Apache-2.0.txt accompanies the two distributed source frame extracts.
+The source dataset and LeRobot/LIBERO are third-party works. No weights or other dataset frames are bundled.
+
+Upstream demonstrations: Bo Liu, Yifeng Zhu, Chongkai Gao, Yihao Feng, Qiang Liu, Yuke Zhu and Peter Stone (2023), LIBERO. The original benchmark credits its datasets under CC BY 4.0.
+https://github.com/Lifelong-Robot-Learning/LIBERO#license
+https://creativecommons.org/licenses/by/4.0/

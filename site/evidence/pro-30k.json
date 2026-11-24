@@ -1,0 +1,285 @@
+{
+  "snapshot_at": "2026-11-23T17:08+09:00",
+  "checkpoint_optimizer_updates": 30000,
+  "starting_vlm": "Base for both arms",
+  "comparison": "Frozen VLM (action-side training) versus joint VLA training",
+  "completion_status": "partial",
+  "coverage_rule": "Each row is one official test case and repeat. Empty outcome cells mean unobserved at the snapshot. Percentages use observed rows only. Matched results use the intersection of trial IDs.",
+  "success_rule": "One binary outcome from the Pro environment success flag when the rollout terminates or reaches its time limit.",
+  "pairing_rule": "Trial IDs combine suite, base task ID, case ID and repeat. Both plans use repeat as the reset seed and initial-state ID and use a deterministic action-noise generator seeded by trial ID.",
+  "case_order": "Official task manifest order followed by repeat 0–9. The runner dispatches fixed-order batches and writes individual outcomes as workers finish.",
+  "interpretation": "The frozen run covered more trials. Neither arm has a complete 3,390-rollout result at this snapshot. Both policies start with the Base VLM; these results do not measure a Pro-VQA initialization effect.",
+  "plan": {
+    "batch_size": 16,
+    "trials": 3390,
+    "repeats": 10,
+    "smoke": false,
+    "scored": true,
+    "denoising_steps": 10,
+    "n_action_steps": 1,
+    "native_rgb": true,
+    "precision": "bf16",
+    "noise": "independent CPU generator seeded by trial ID; shared across model arms"
+  },
+  "all": {
+    "official_cases": 339,
+    "official_trials": 3390,
+    "frozen_base": {
+      "scored_trials": 2992,
+      "successes": 7,
+      "percent_on_scored_trials": 0.234
+    },
+    "joint_base": {
+      "scored_trials": 1936,
+      "successes": 2,
+      "percent_on_scored_trials": 0.1033
+    },
+    "matched": {
+      "scored_trials_per_arm": 1936,
+      "frozen_base": {
+        "successes": 3,
+        "percent_on_shared_trials": 0.155
+      },
+      "joint_base": {
+        "successes": 2,
+        "percent_on_shared_trials": 0.1033
+      },
+      "outcome_pairs": {
+        "both_success": 0,
+        "only_frozen_success": 3,
+        "only_joint_success": 2,
+        "neither_success": 1931
+      }
+    }
+  },
+  "by_suite": {
+    "libero_10": {
+      "official_cases": 84,
+      "official_trials": 840,
+      "frozen_base": {
+        "scored_trials": 840,
+        "successes": 0,
+        "percent_on_scored_trials": 0.0
+      },
+      "joint_base": {
+        "scored_trials": 840,
+        "successes": 0,
+        "percent_on_scored_trials": 0.0
+      },
+      "matched": {
+        "scored_trials_per_arm": 840,
+        "frozen_base": {
+          "successes": 0,
+          "percent_on_shared_trials": 0.0
+        },
+        "joint_base": {
+          "successes": 0,
+          "percent_on_shared_trials": 0.0
+        },
+        "outcome_pairs": {
+          "both_success": 0,
+          "only_frozen_success": 0,
+          "only_joint_success": 0,
+          "neither_success": 840
+        }
+      }
+    },
+    "libero_goal": {
+      "official_cases": 85,
+      "official_trials": 850,
+      "frozen_base": {
+        "scored_trials": 850,
+        "successes": 0,
+        "percent_on_scored_trials": 0.0
+      },
+      "joint_base": {
+        "scored_trials": 850,
+        "successes": 1,
+        "percent_on_scored_trials": 0.1176
+      },
+      "matched": {
+        "scored_trials_per_arm": 850,
+        "frozen_base": {
+          "successes": 0,
+          "percent_on_shared_trials": 0.0
+        },
+        "joint_base": {
+          "successes": 1,
+          "percent_on_shared_trials": 0.1176
+        },
+        "outcome_pairs": {
+          "both_success": 0,
+          "only_frozen_success": 0,
+          "only_joint_success": 1,
+          "neither_success": 849
+        }
+      }
+    },
+    "libero_object": {
+      "official_cases": 86,
+      "official_trials": 860,
+      "frozen_base": {
+        "scored_trials": 860,
+        "successes": 7,
+        "percent_on_scored_trials": 0.814
+      },
+      "joint_base": {
+        "scored_trials": 246,
+        "successes": 1,
+        "percent_on_scored_trials": 0.4065
+      },
+      "matched": {
+        "scored_trials_per_arm": 246,
+        "frozen_base": {
+          "successes": 3,
+          "percent_on_shared_trials": 1.2195
+        },
+        "joint_base": {
+          "successes": 1,
+          "percent_on_shared_trials": 0.4065
+        },
+        "outcome_pairs": {
+          "both_success": 0,
+          "only_frozen_success": 3,
+          "only_joint_success": 1,
+          "neither_success": 242
+        }
+      }
+    },
+    "libero_spatial": {
+      "official_cases": 84,
+      "official_trials": 840,
+      "frozen_base": {
+        "scored_trials": 442,
+        "successes": 0,
+        "percent_on_scored_trials": 0.0
+      },
+      "joint_base": {
+        "scored_trials": 0,
+        "successes": 0,
+        "percent_on_scored_trials": null
+      },
+      "matched": {
+        "scored_trials_per_arm": 0,
+        "frozen_base": {
+          "successes": 0,
+          "percent_on_shared_trials": null
+        },
+        "joint_base": {
+          "successes": 0,
+          "percent_on_shared_trials": null
+        },
+        "outcome_pairs": {
+          "both_success": 0,
+          "only_frozen_success": 0,
+          "only_joint_success": 0,
+          "neither_success": 0
+        }
+      }
+    }
+  },
+  "evidence": {
+    "table": "pro-30k-trials.csv",
+    "table_sha256": "0c1fe0db3dab3298743560ee0d89011831333643f85eaa09d1cc0ac62c18f96d",
+    "source_prefix_definition": "Exact raw bytes of the first N newline-terminated records in each append-only JSONL file, including newlines. The prefix digest refers to those N records even if the source file grows.",
+    "sources": {
+      "frozen_base": {
+        "episode_log": "outputs/libero_pro2_action_20261115/base_eval_30k/episodes.jsonl",
+        "records_in_prefix": 2992,
+        "bytes_in_prefix": 304873,
+        "prefix_sha256": "518a08a221c66fcf040df854f9e1a8a48d1a6ee5178582e3d427e548ac32f0c2",
+        "plan": "outputs/libero_pro2_action_20261115/base_eval_30k/plan.json",
+        "plan_sha256": "df999f1c2a00a6f8ebfdfeee10cac0f0ac05a1959f3d41dd0581b0450313afe0",
+        "checkpoint_training_step": "outputs/libero_pro2_action_20261115/base/checkpoints/030000/training_state/training_step.json",
+        "training_step_sha256": "de6c887d71795dd031b81f161e8180a4ef374d4c47d1946eef674fca93d41917"
+      },
+      "joint_base": {
+        "episode_log": "outputs/libero_full_vla_20261115/pro/eval_base_030000/episodes.jsonl",
+        "records_in_prefix": 1936,
+        "bytes_in_prefix": 195286,
+        "prefix_sha256": "11f59920b1ba0ebdef605b194248acba9f04b203fcdc13fe893ddfe460a07859",
+        "plan": "outputs/libero_full_vla_20261115/pro/eval_base_030000/plan.json",
+        "plan_sha256": "2330672cf41329e82345f8d13cce34e428cf3591ae646bdfe5147cd772b1ae58",
+        "checkpoint_training_step": "outputs/libero_full_vla_20261115/pro/base/checkpoints/030000/training_state/training_step.json",
+        "training_step_sha256": "de6c887d71795dd031b81f161e8180a4ef374d4c47d1946eef674fca93d41917"
+      }
+    },
+    "official_split": "vendor/libero_pro2_qa/assets/benchmark_split_v1.json",
+    "official_split_sha256": "3e2997488c97434d3da4ed8da22f384f0e047eef38b5e66ded168d4da1a7eb87",
+    "official_manifest": "vendor/libero_pro2_qa/assets/task_manifest.json",
+    "official_manifest_sha256": "71a6e4e25a2a4a162844d77136e7bff8e6f69c839d2d8194620c4afeabde2bba",
+    "evaluator": "experiments/libero_pro2_action_20261115/evaluate.py",
+    "evaluator_sha256": "65c7ba8d47824728e9b08e56ab38e98b97673212ed245b41ff42936c7c8c9d24"
+  },
+  "action_training_split_audit": {
+    "selected_public_episodes": 18751,
+    "distinct_selected_suite_base_tasks": 32,
+    "official_held_out_suite_base_tasks": 8,
+    "overlapping_suite_base_tasks": 0,
+    "cross_check": "Joined selected public episode indices to the native episode mapping. All 94 ambiguous singletons were retained as a set, so no per-episode pairing assumption was necessary. Compared the resulting suite and base-task indices to both official split lists. This check pertains to the selected Pro action-training demonstrations.",
+    "episodes_by_suite_base_task": {
+      "libero_spatial": {
+        "1": 602,
+        "2": 616,
+        "3": 603,
+        "4": 560,
+        "5": 631,
+        "6": 574,
+        "7": 616,
+        "9": 560
+      },
+      "libero_object": {
+        "0": 645,
+        "2": 617,
+        "3": 631,
+        "4": 617,
+        "5": 631,
+        "6": 589,
+        "7": 631,
+        "9": 617
+      },
+      "libero_goal": {
+        "0": 526,
+        "1": 645,
+        "2": 645,
+        "4": 645,
+        "5": 498,
+        "7": 541,
+        "8": 645,
+        "9": 616
+      },
+      "libero_10": {
+        "0": 589,
+        "1": 603,
+        "2": 631,
+        "3": 281,
+        "4": 603,
+        "6": 603,
+        "7": 505,
+        "9": 435
+      }
+    },
+    "official_held_out_ids_by_suite": {
+      "libero_spatial": [
+        0,
+        8
+      ],
+      "libero_object": [
+        1,
+        8
+      ],
+      "libero_goal": [
+        3,
+        6
+      ],
+      "libero_10": [
+        5,
+        8
+      ]
+    },
+    "selected_episode_file": "outputs/libero_pro2_public_20261115/selected_episodes.json",
+    "selected_episode_sha256": "1ff2e4dff9bd4b8684c1b3ad1f1b0884871a3971244fcd6092fb5823ac2503d3",
+    "native_episode_mapping_file": "outputs/libero_pro2_public_20261115/episode_mapping.json",
+    "native_episode_mapping_sha256": "8d1334cf32a0b9d83bfd04d4b71d269b906cfa0d2cbb93f9ffd922993258dd00"
+  }
+}

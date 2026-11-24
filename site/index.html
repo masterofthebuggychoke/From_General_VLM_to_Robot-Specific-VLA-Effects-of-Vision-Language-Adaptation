@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Does visual grounding transfer to robot control? — SmolVLA study</title>
+  <meta name="description" content="A controlled SmolVLA study across 36,000 LIBERO rollouts, real-world visual questions, and a physical SO-101 robot.">
+  <meta name="author" content="Handonghyun">
+  <meta name="theme-color" content="#f8f7f2">
+  <link rel="icon" href="data:,">
+  <link rel="preload" href="assets/fonts/InstrumentSerif-Regular.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="style.css">
+  <script id="task-values" type="application/json">[{"suite":"Spatial","id":0,"instruction":"pick up the black bowl between the plate and the ramekin and place it on the plate","frozen-base":39,"frozen-finetuned":41,"full-base":49,"full-finetuned":48},{"suite":"Spatial","id":1,"instruction":"pick up the black bowl next to the ramekin and place it on the plate","frozen-base":48,"frozen-finetuned":48,"full-base":49,"full-finetuned":49},{"suite":"Spatial","id":2,"instruction":"pick up the black bowl from table center and place it on the plate","frozen-base":47,"frozen-finetuned":49,"full-base":49,"full-finetuned":50},{"suite":"Spatial","id":3,"instruction":"pick up the black bowl on the cookie box and place it on the plate","frozen-base":44,"frozen-finetuned":45,"full-base":50,"full-finetuned":50},{"suite":"Spatial","id":4,"instruction":"pick up the black bowl in the top drawer of the wooden cabinet and place it on the plate","frozen-base":32,"frozen-finetuned":47,"full-base":38,"full-finetuned":41},{"suite":"Spatial","id":5,"instruction":"pick up the black bowl on the ramekin and place it on the plate","frozen-base":27,"frozen-finetuned":29,"full-base":22,"full-finetuned":7},{"suite":"Spatial","id":6,"instruction":"pick up the black bowl next to the cookie box and place it on the plate","frozen-base":44,"frozen-finetuned":48,"full-base":49,"full-finetuned":49},{"suite":"Spatial","id":7,"instruction":"pick up the black bowl on the stove and place it on the plate","frozen-base":39,"frozen-finetuned":47,"full-base":45,"full-finetuned":47},{"suite":"Spatial","id":8,"instruction":"pick up the black bowl next to the plate and place it on the plate","frozen-base":39,"frozen-finetuned":40,"full-base":46,"full-finetuned":48},{"suite":"Spatial","id":9,"instruction":"pick up the black bowl on the wooden cabinet and place it on the plate","frozen-base":42,"frozen-finetuned":46,"full-base":46,"full-finetuned":38},{"suite":"Object","id":0,"instruction":"pick up the alphabet soup and place it in the basket","frozen-base":49,"frozen-finetuned":50,"full-base":45,"full-finetuned":49},{"suite":"Object","id":1,"instruction":"pick up the cream cheese and place it in the basket","frozen-base":32,"frozen-finetuned":43,"full-base":47,"full-finetuned":47},{"suite":"Object","id":2,"instruction":"pick up the salad dressing and place it in the basket","frozen-base":41,"frozen-finetuned":41,"full-base":24,"full-finetuned":21},{"suite":"Object","id":3,"instruction":"pick up the bbq sauce and place it in the basket","frozen-base":48,"frozen-finetuned":49,"full-base":43,"full-finetuned":50},{"suite":"Object","id":4,"instruction":"pick up the ketchup and place it in the basket","frozen-base":45,"frozen-finetuned":42,"full-base":38,"full-finetuned":36},{"suite":"Object","id":5,"instruction":"pick up the tomato sauce and place it in the basket","frozen-base":24,"frozen-finetuned":45,"full-base":49,"full-finetuned":50},{"suite":"Object","id":6,"instruction":"pick up the butter and place it in the basket","frozen-base":35,"frozen-finetuned":43,"full-base":49,"full-finetuned":48},{"suite":"Object","id":7,"instruction":"pick up the milk and place it in the basket","frozen-base":44,"frozen-finetuned":38,"full-base":45,"full-finetuned":50},{"suite":"Object","id":8,"instruction":"pick up the chocolate pudding and place it in the basket","frozen-base":38,"frozen-finetuned":44,"full-base":49,"full-finetuned":50},{"suite":"Object","id":9,"instruction":"pick up the orange juice and place it in the basket","frozen-base":40,"frozen-finetuned":45,"full-base":49,"full-finetuned":47},{"suite":"Goal","id":0,"instruction":"open the middle drawer of the cabinet","frozen-base":37,"frozen-finetuned":47,"full-base":36,"full-finetuned":46},{"suite":"Goal","id":1,"instruction":"put the bowl on the stove","frozen-base":48,"frozen-finetuned":50,"full-base":49,"full-finetuned":47},{"suite":"Goal","id":2,"instruction":"put the wine bottle on top of the cabinet","frozen-base":41,"frozen-finetuned":39,"full-base":45,"full-finetuned":48},{"suite":"Goal","id":3,"instruction":"open the top drawer and put the bowl inside","frozen-base":24,"frozen-finetuned":18,"full-base":27,"full-finetuned":19},{"suite":"Goal","id":4,"instruction":"put the bowl on top of the cabinet","frozen-base":49,"frozen-finetuned":45,"full-base":50,"full-finetuned":49},{"suite":"Goal","id":5,"instruction":"push the plate to the front of the stove","frozen-base":45,"frozen-finetuned":39,"full-base":43,"full-finetuned":24},{"suite":"Goal","id":6,"instruction":"put the cream cheese in the bowl","frozen-base":30,"frozen-finetuned":34,"full-base":36,"full-finetuned":33},{"suite":"Goal","id":7,"instruction":"turn on the stove","frozen-base":50,"frozen-finetuned":50,"full-base":48,"full-finetuned":50},{"suite":"Goal","id":8,"instruction":"put the bowl on the plate","frozen-base":47,"frozen-finetuned":50,"full-base":49,"full-finetuned":49},{"suite":"Goal","id":9,"instruction":"put the wine bottle on the rack","frozen-base":25,"frozen-finetuned":32,"full-base":32,"full-finetuned":32},{"suite":"Long","id":0,"instruction":"put both the alphabet soup and the tomato sauce in the basket","frozen-base":15,"frozen-finetuned":32,"full-base":41,"full-finetuned":32},{"suite":"Long","id":1,"instruction":"put both the cream cheese box and the butter in the basket","frozen-base":31,"frozen-finetuned":41,"full-base":40,"full-finetuned":46},{"suite":"Long","id":2,"instruction":"turn on the stove and put the moka pot on it","frozen-base":40,"frozen-finetuned":46,"full-base":47,"full-finetuned":37},{"suite":"Long","id":3,"instruction":"put the black bowl in the bottom drawer of the cabinet and close it","frozen-base":44,"frozen-finetuned":49,"full-base":48,"full-finetuned":50},{"suite":"Long","id":4,"instruction":"put the white mug on the left plate and put the yellow and white mug on the right plate","frozen-base":19,"frozen-finetuned":25,"full-base":42,"full-finetuned":32},{"suite":"Long","id":5,"instruction":"pick up the book and place it in the back compartment of the caddy","frozen-base":37,"frozen-finetuned":49,"full-base":49,"full-finetuned":39},{"suite":"Long","id":6,"instruction":"put the white mug on the plate and put the chocolate pudding to the right of the plate","frozen-base":31,"frozen-finetuned":19,"full-base":34,"full-finetuned":34},{"suite":"Long","id":7,"instruction":"put both the alphabet soup and the cream cheese box in the basket","frozen-base":14,"frozen-finetuned":30,"full-base":43,"full-finetuned":36},{"suite":"Long","id":8,"instruction":"put both moka pots on the stove","frozen-base":28,"frozen-finetuned":12,"full-base":31,"full-finetuned":20},{"suite":"Long","id":9,"instruction":"put the yellow and white mug in the microwave and close it","frozen-base":29,"frozen-finetuned":38,"full-base":44,"full-finetuned":33}]</script>
+  <script src="config.js" defer></script><script src="page.js" defer></script>
+</head>
+<body>
+<a href="#method" class="skip">Skip to study</a>
+<header class="mast"><div class="frame">
+  <a class="wordmark" href="#top">SmolVLA <i>/</i> Grounding study</a>
+  <nav aria-label="Primary navigation"><a href="#libero">LIBERO</a><a href="#pro">Pro results</a><a href="#robot">Physical robot</a><a href="#resources">Resources</a></nav>
+</div></header>
+<main id="top">
+<div class="front frame">
+  <div class="hero-grid">
+    <div class="headline">
+      <p class="kicker">Robot learning <span class="sep">/</span> Research project</p>
+      <h1>Does visual grounding transfer to robot control?</h1>
+      <p class="dek">We tested whether teaching a model to locate objects and describe their relations changes what a robot can do with the same action demonstrations.</p>
+      <p class="byline">Handonghyun</p>
+      <div class="actions"><a class="primary" href="report.pdf">Read the report <span aria-hidden="true">↗</span></a><a class="plain" href="downloads/code.zip" data-code download>Download code <span aria-hidden="true">↓</span></a></div>
+    </div>
+    <figure class="lead-photo">
+      <img src="assets/so101-rollout-record.jpg" width="1280" height="720" fetchpriority="high" alt="Physical SO-101 arm above a red block and a wicker basket on the team’s workbench.">
+      <figcaption><span>Physical rollout, SO-101</span><span>Documented 17 Nov 2026</span></figcaption>
+    </figure>
+  </div>
+  <div class="findings">
+    <p><strong>+7.20<span> <abbr title="percentage points">pp</abbr></span></strong><span>Effect of prior VQA at 12k <br>with the VLM frozen</span></p>
+    <p><strong>−4.20<span> <abbr title="percentage points">pp</abbr></span></strong><span>Effect of prior VQA at 12k <br>with joint VLA tuning</span></p>
+    <p><strong>75</strong><span>Two-camera demonstrations <br>on the physical arm</span></p>
+  </div>
+</div>
+
+<div class="study frame">
+<aside class="rail"><div><p>In this study</p><nav aria-label="Study contents">
+  <a href="#method">Experimental design</a><a href="#libero">LIBERO results</a><a href="#rollout">Policy rollouts</a><a href="#robot">Physical SO-101</a><a href="#attention">Inside the model</a><a href="#pro">LIBERO-Pro results</a><a href="#resources">Evidence &amp; code</a>
+</nav><small>Evidence snapshot<br>23 November 2026</small></div></aside>
+<article class="body">
+<section id="method">
+  <p class="kicker">Experimental design</p><h2>What changes before action training?</h2>
+  <p class="lead">To put “the black bowl between the plate and the ramekin” on a plate, a policy must identify a particular object, locate it, and then act. We asked whether the first two abilities could be practised on images before the downstream action-training stage.</p>
+  <p>Collecting another physical demonstration takes time on the robot and an operator. A recorded image can support several questions about objects and their positions. We used the published SmolVLA architecture and the LIBERO benchmark to test whether that extra supervision helped. Our experiments constructed visual question–answer (VQA) pairs, varied the starting vision–language model (VLM), trained the action policy, and measured task completion. On the physical SO-101 we also recorded synchronized images and joint commands, trained policies on those recordings, and documented a hardware rollout.</p>
+  <dl class="decisions"><div><dt>Starting VLM</dt><dd><b>Base</b> begins with the released SmolVLA vision–language weights. <b>Mixed + LIBERO</b> starts there, trains for two epochs on 21,861 LIBERO and 82,735 RoboInter-DROID question–answer pairs, then trains for one more epoch on LIBERO. The two single-source arms each use two epochs.</dd></div>
+  <div><dt>Action training</dt><dd><b>Frozen VLM</b> updates the action expert and the state, action and time projections. <b>Joint VLA</b> also updates the vision, language and connector modules used for action prediction. Unused final language components are excluded. We verified identical, freshly initialized action weights across the paired arms.</dd></div></dl>
+  <figure class="fieldnote"><figcaption>Training example · LIBERO Spatial, task 0, demonstration 0, frame 10</figcaption><p>The visible box of the selected bowl is <code>[688, 348, 830, 461]</code> on a 0–1000 coordinate scale. In the same image, its visible center is <em>below</em> the center of the plate.</p></figure>
+  <p class="refs"><a href="evidence/method.json">Source questions</a><a href="evidence/simulation.json">Training design</a><a href="https://arxiv.org/abs/2506.01844">SmolVLA paper ↗</a></p>
+</section>
+
+<section id="libero">
+  <p class="kicker">Simulation / LIBERO</p><h2>The effect of VQA depends on which weights are trained</h2>
+  <p class="lead">With a frozen VLM, Mixed + LIBERO outperformed Base at all three checkpoints. With joint tuning, it led by 21.20 percentage points at 4k. By 12k, Base led by 4.20 points.</p>
+  <p>Every arm used 1,693 demonstrations (273,465 frames), a training seed of 0, and an effective batch of 64. At each checkpoint we evaluated four suites, ten tasks per suite, and 50 rollouts per task. A rollout counted as successful when the simulator’s task predicate was met. Each point below represents 2,000 rollouts.</p>
+  <figure class="figure chart"><img src="assets/libero-curves.svg" alt="At 4k, 8k and 12k, Mixed exceeds Base with a frozen VLM. In the joint setting Base overtakes it by 8k."><figcaption><b>Fig. 1</b> Base and Mixed + LIBERO share an action initialization. Each panel compares starting VLMs within one tuning regime.</figcaption></figure>
+  <div class="tablewrap"><table id="overall"><caption>LIBERO task success, % · 36,000 rollouts across the 18 cells</caption><thead><tr><th>Action training</th><th>Starting VLM</th><th>4k</th><th>8k</th><th>12k</th></tr></thead><tbody>
+  <tr><td>Frozen VLM</td><th>Base</th><td>51.65</td><td>72.45</td><td>74.05</td></tr>
+  <tr><td>Frozen VLM</td><th>Mixed + LIBERO</th><td>60.00</td><td>80.75</td><td>81.25</td></tr>
+  <tr><td>Frozen VLM</td><th>LIBERO only</th><td>62.00</td><td>78.30</td><td>76.75</td></tr>
+  <tr><td>Frozen VLM</td><th>RoboInter only</th><td>59.75</td><td>78.90</td><td>78.90</td></tr>
+  <tr class="divider"><td>Joint VLA</td><th>Base</th><td>60.35</td><td>84.05</td><td><b>85.75</b></td></tr>
+  <tr><td>Joint VLA</td><th>Mixed + LIBERO</th><td>81.55</td><td>82.00</td><td>81.55</td></tr>
+  </tbody></table></div>
+  <h3>Where did the 84-rollout gap come from?</h3>
+  <p>At 12k, joint Base succeeded in 1,715 of 2,000 rollouts, compared with 1,631 of 2,000 for joint Mixed. The Long suite accounted for 60 of those 84 additional successes. Object went the other way. The benchmark contains many different tasks, so the overall gap describes neither every task nor a particular failure mechanism.</p>
+  <div class="tablewrap"><table id="suites"><caption>Success at 12k, % · 500 rollouts per suite and condition</caption><thead><tr><th>Suite</th><th>Frozen<br>Base</th><th>Frozen<br>Mixed</th><th>Joint<br>Base</th><th>Joint<br>Mixed</th><th>Joint Δ<br>Mixed − Base</th></tr></thead><tbody>
+  <tr><th>Spatial</th><td>80.2</td><td>88.0</td><td>88.6</td><td>85.4</td><td>−3.2</td></tr><tr><th>Object</th><td>79.2</td><td>88.0</td><td>87.6</td><td>89.6</td><td>+2.0</td></tr>
+  <tr><th>Goal</th><td>79.2</td><td>80.8</td><td>83.0</td><td>79.4</td><td>−3.6</td></tr><tr><th>Long</th><td>57.6</td><td>68.2</td><td>83.8</td><td>71.8</td><td><b>−12.0</b></td></tr>
+  </tbody></table></div>
+  <div class="explorer" id="task-explorer" hidden>
+    <label for="task-picker">Explore all 40 tasks at 12k</label><select id="task-picker" aria-describedby="current-instruction"></select>
+    <p id="current-instruction" class="task-instruction"></p>
+    <div class="task-results" aria-live="polite"><p><strong id="task-frozen"></strong><span>Frozen VLM · Base → Mixed</span></p><p><strong id="task-joint"></strong><span>Joint VLA · Base → Mixed</span></p></div>
+    <small>Successful rollouts out of 50 for each model.</small>
+  </div>
+  <p>For example, putting both moka pots on the stove succeeded 31/50 times with joint Base and 20/50 with joint Mixed. Putting the black bowl in the bottom drawer and closing it improved from 48/50 to 50/50. Endpoint labels cannot localize a failure to grasping, transport, or release.</p>
+  <p>We recomputed the 12k difference after dropping each task in turn. Mixed minus Base ranged from +6.31 to +8.21 pp with a frozen VLM and from −4.82 to −3.33 pp with joint tuning. Omitting the entire Long suite narrowed the joint gap to −1.60 pp. These are sensitivity checks on task composition. Only one training seed was measured.</p>
+  <p class="caveat"><b>Comparison scope.</b> The frozen schedule reached its learning-rate floor at 8k, while joint tuning decayed until 12k. Mixed also received a final LIBERO epoch. Cross-regime and cross-corpus differences therefore include schedule or training-budget effects.</p>
+  <p class="refs"><a href="evidence/libero.csv">Success counts</a><a href="evidence/libero-tasks.csv">All tasks</a><a href="evidence/libero-configs.csv">Configurations</a><a href="evidence/sensitivity.csv">88 exclusion checks</a></p>
+</section>
+
+<section id="rollout">
+  <p class="kicker">Policy rollouts</p><h2>Two policies at the same starting state</h2>
+  <p class="lead">Both models started at the same reset with the instruction “pick up the butter and place it in the basket.” Both had a frozen VLM and 4,000 action-training updates. This comparison uses <b>LIBERO-only</b> VQA for the model on the right.</p>
+  <figure class="figure"><video controls playsinline preload="metadata" poster="assets/libero-comparison.jpg" aria-label="Base fails on the left; the LIBERO-only VQA policy succeeds on the right, from the same reset."><source src="assets/libero-comparison.mp4" type="video/mp4"></video>
+  <figcaption><b>Film 1</b> LIBERO Object, task 6, reset 0. Replayed at the 20 Hz control rate for 14 seconds. The right panel holds its final frame once the policy succeeds. <a href="assets/libero-comparison.mp4" download>MP4 ↓</a></figcaption></figure>
+  <p>We deliberately selected a disagreement. Across all 50 resets of this task, Base succeeded 21 times and LIBERO-only succeeded 47 times. The first ten recorded outcomes matched the original evaluation in both arms. This clip illustrates their difference on one reset.</p>
+  <p class="refs"><a href="evidence/libero-video.json">Original trial flags &amp; video provenance</a></p>
+</section>
+
+<section id="robot">
+  <p class="kicker">Physical robot / SO-101</p><h2>Pick-and-place on a physical SO-101</h2>
+  <p class="lead">A simulated task can return a success flag at every step. On our workbench we first needed a repeatable record of what the robot saw and what its operator commanded.</p>
+  <figure class="figure"><video controls playsinline preload="metadata" poster="assets/so101-demo-poster.jpg" aria-label="Synchronized top and wrist camera views of a person teleoperating the SO-101 to move a red block into a basket."><source src="assets/so101-demo.mp4" type="video/mp4"></video>
+  <figcaption><b>Film 2</b> Team-collected demonstration 0. Top and wrist cameras are synchronized. The full human-operated episode runs for 21.13 seconds at its recorded 30 fps. <a href="assets/so101-demo.mp4" download>MP4 ↓</a></figcaption></figure>
+  <h3>What we ran on hardware</h3>
+  <p>After calibrating the leader–follower arm, we collected 75 demonstrations of moving a red cube into a basket. Across 39,000 synchronized time steps, each sample contains two camera views and six position channels for state and action (five arm joints and the gripper). All 75 episodes went into policy training.</p>
+  <p>Our 17 November record shows a physical pick-and-place rollout after training on 75 demonstrations for 7,500 steps. Separately, saved Adam states confirm 7,500 optimizer updates in a full-tuning run, and hardware inference-server logs show that checkpoint serving action requests. The photograph has no checkpoint identifier or terminal outcome. Three later branches reached 30k real-data updates: original and aligned froze the VLM; curriculum tuned it jointly from a different external adaptation stage.</p>
+  <h3>Real imagery exposed a localization gap</h3>
+  <p>On an external SO-101 image dataset, we used 16,112 training, 1,675 validation and 934 test questions from 5,792 images overall. The two held-out test collection groups were disjoint from training and validation. We evaluated a 32-layer SmolVLM2-500M against model-reviewed pseudo-labels. Categorical questions use normalized short-answer agreement.</p>
+  <div class="tablewrap"><table id="realqa"><caption>Held-out real-image VQA · 934 questions</caption><thead><tr><th>Question family</th><th>Correct / evaluated</th><th>Accuracy</th></tr></thead><tbody>
+  <tr><th>Image quadrant</th><td>197 / 243</td><td>81.07%</td></tr><tr><th>Relative position</th><td>37 / 51</td><td>72.55%</td></tr><tr><th>Color</th><td>157 / 309</td><td>50.81%</td></tr><tr><th>Bounding box, IoU ≥ 0.50</th><td>24 / 331</td><td>7.25%</td></tr></tbody></table></div>
+  <p>We rescored all 331 box predictions. At intersection-over-union thresholds of 0.25, 0.50 and 0.75, respectively 104, 24 and zero boxes passed. For boxes specifically requested as a task target, only 1/81 passed at 0.50. Locating a coarse region was easier than matching a tight box on this test. The available data cannot connect individual localization errors to physical grasp failures.</p>
+  <p>In a separate curriculum run, the same validation questions were scored before training and at the selected fourth epoch. Allowing an unambiguous label inside a longer response, quadrant answers improved from 126/392 to 287/392 and relative position from 47/96 to 82/96. Output-format compliance rose from 73/1,675 to 1,674/1,675. These validation measurements and the held-out test above concern separate model evaluations.</p>
+  <h3>Four physical conditions in collection</h3>
+  <div class="tablewrap"><table id="collection"><caption>Planned demonstration episodes per condition · team update, 23 November</caption><thead><tr><th>Task</th><th>Simple · two blocks</th><th>Hard · three blocks</th></tr></thead><tbody><tr><th>Pick-and-place</th><td>150–200</td><td>≈250</td></tr><tr><th>Stack</th><td>150–200</td><td>≈250</td></tr></tbody></table></div>
+  <p>We have yet to establish how the original 75 episodes count toward these targets. Scored physical trials require the policy checkpoint, placement conditions, success rubric and trial counts. Physical autonomous success rates for the four conditions remain open.</p>
+  <p class="refs"><a href="evidence/real-world.json">Hardware &amp; perception evidence</a><a href="evidence/real-box-thresholds.csv">IoU breakdown</a><a href="evidence/real-box-pairs.csv">331 box pairs</a></p>
+</section>
+
+<section id="attention">
+  <p class="kicker">Inside the model</p><h2>What does an action query attend to?</h2>
+  <p class="lead">In SmolVLA’s Table 6, cross-attention (CA), causal self-attention (SA), and interleaved CA/SA reached 79.0%, 74.5% and 85.5% LIBERO success. We asked a narrower question inside the interleaved architecture: how much normalized attention falls on each input group?</p>
+  <figure class="figure chart"><img src="assets/attention-map.png" alt="Two camera views with overlaid attention maps from Base and Mixed VLMs. All panels show the first action query at the same input and use one absolute probability scale."><figcaption><b>Fig. 2</b> Demonstration 0, frame 70, two mugs and two plates. The first action query at SA layer 14 and CA layer 15, averaged over 15 heads and 10 denoising steps. Both policies used frozen VLMs and 8k action updates.</figcaption></figure>
+  <div class="tablewrap"><table id="attention-table"><caption>Post-softmax attention mass by key group, % · mean over all 50 action queries</caption><thead><tr><th>Starting VLM</th><th>Layer type</th><th>Image</th><th>Language</th><th>State</th><th>Action</th></tr></thead><tbody>
+  <tr><th>Base</th><td>SA</td><td>46.7</td><td>20.2</td><td>3.8</td><td>29.4</td></tr><tr><th>Base</th><td>CA</td><td>54.9</td><td>36.6</td><td>8.4</td><td>0.0</td></tr>
+  <tr><th>Mixed + LIBERO</th><td>SA</td><td>50.0</td><td>19.5</td><td>3.7</td><td>26.9</td></tr><tr><th>Mixed + LIBERO</th><td>CA</td><td>60.3</td><td>34.7</td><td>5.0</td><td>0.0</td></tr></tbody></table></div>
+  <p>In causal SA, the action query assigns probability to image, language, state and available action keys. For Base, action mass grew from 3.4% at the first query to 45.4% at the last, where more earlier actions are available. Averaged across queries, <b>both SA models assigned more mass to images than to actions.</b> CA excludes action keys, giving them zero mass by construction.</p>
+  <p>The table pools three frames (20, 70, 120) of one recorded episode, eight layers of each type, 15 heads, 10 denoising steps and 50 queries. In this input, the higher-scoring frozen Mixed policy also assigned more mass to visual keys. Attention weights alone measure neither the contribution of the value vectors nor the effect of a token on the next action. The architecture ablation in the paper and the reversal under joint tuning remain separate questions.</p>
+  <p class="refs"><a href="evidence/attention.csv">Query groups</a><a href="evidence/attention-layers.csv">Layer breakdown</a><a href="evidence/attention-map-input.npz">Figure arrays</a><a href="https://arxiv.org/html/2506.01844v1#S4.T6">Original Table 6 ↗</a></p>
+</section>
+
+<section id="pro">
+  <p class="kicker">Benchmark extension / LIBERO-Pro 2.0</p><h2>Few successful rollouts on the held-out Pro tasks at 30k</h2>
+  <p class="lead">On the same 1,936 recorded trials, frozen Base succeeded 3 times (0.15%) and joint Base succeeded twice (0.10%). Both policies started with the Base VLM and had 30,000 action-training updates.</p>
+  <p>The selected action-training episodes covered 32 base tasks. The official test split uses eight different base tasks, two per suite, across 339 task–variant cases. Our protocol runs ten repeats per case, giving 3,390 planned rollouts per policy. We matched the two logs by suite, base task, variant and repeat. Each recorded success is a binary simulator goal check.</p>
+  <div class="tablewrap"><table id="pro-outcomes"><caption>30k Base checkpoints · successes / recorded rollouts at 17:08 KST, 23 November 2026</caption><thead><tr><th>Pro suite</th><th>Planned per policy</th><th>Frozen VLM</th><th>Joint VLA</th></tr></thead><tbody>
+  <tr><th>Long</th><td>840</td><td>0 / 840</td><td>0 / 840</td></tr>
+  <tr><th>Goal</th><td>850</td><td>0 / 850</td><td>1 / 850</td></tr>
+  <tr><th>Object</th><td>860</td><td>7 / 860</td><td>1 / 246</td></tr>
+  <tr><th>Spatial</th><td>840</td><td>0 / 442</td><td>No recorded trials</td></tr>
+  <tr class="divider"><th>All recorded trials</th><td>3,390</td><td>7 / 2,992</td><td>2 / 1,936</td></tr>
+  </tbody></table></div>
+  <p>Long and Goal had complete coverage for both policies. The shared trials also include 246 Object rollouts and no Spatial rollouts. The frozen policy had progressed further, so its seven successes across all recorded trials use a different mix of cases. On identical trials, the difference was one success. The Pro-VQA checkpoint has no scored evaluation in this snapshot, so the effect of VQA on held-out Pro tasks remains an open question.</p>
+  <p class="refs"><a href="evidence/pro-30k-trials.csv">Per-trial outcomes</a><a href="evidence/pro-30k.json">Matched counts, protocol &amp; cutoff</a></p>
+  <h3>What training data did the policies see?</h3>
+  <p>Sampling roughly half of the episodes within each training condition still produced 15.1 times as many frames as the original LIBERO training set.</p>
+  <div class="tablewrap"><table><caption>Action-training data</caption><thead><tr><th>Dataset</th><th>Episodes</th><th>Frames</th></tr></thead><tbody>
+  <tr><th>LIBERO</th><td>1,693</td><td>273,465</td></tr><tr><th>Pro 2.0 · full corpus</th><td>37,396</td><td>8,227,242</td></tr><tr><th>Pro 2.0 · selected</th><td>18,751</td><td>4,115,692</td></tr></tbody></table></div>
+  <p>We sampled 15,534 images from 7,978 episodes and aligned MuJoCo scene replays with the recorded RGB. Object masks produced 30,597 box and 29,403 relative-position questions. Of the 60,000 questions, 43,939 went to training, 11,478 to validation and 4,583 to test. Split checks found no shared task, episode or exact image. Enlarging the original 128-pixel images adds no spatial detail. A fresh replay of one S13 scene exceeded the historical pixel-error tolerance in one object region; reconstructing the archived QA and reproducing every simulator mask have different requirements.</p>
+  <p>VLM tuning completed 2,748 updates. We used the verified public LeRobot-format subset for action training, checking a 180° camera rotation and conversion from quaternion to axis–angle state. The latest confirmed 90k checkpoints cover frozen Base, frozen Pro VQA, and joint Base.</p>
+  <p class="refs"><a href="evidence/simulation.json">Pro data &amp; checkpoints</a><a href="evidence/simulation-sources.json">Source hashes</a><a href="https://huggingface.co/datasets/phicoltan/libero_pro2/tree/e527a3276cc33258e9979e6c322b703bc8c0ef62">Pinned public dataset ↗</a></p>
+</section>
+
+<section id="resources">
+  <p class="kicker">Evidence &amp; code</p><h2>Data, code and references</h2>
+  <p>The task-level results and numeric box pairs are sufficient to reproduce both sensitivity analyses on CPU. The code includes data preparation, VLM and VLA training, simulation evaluation, attention capture, and the exact versions or additional assets each step requires. Physical evaluation requires a calibrated arm, cameras and a recorded scoring protocol.</p>
+  <div class="linkrows">
+    <a href="report.pdf"><span>Research report</span><small>Standalone PDF ↗</small></a>
+    <a href="downloads/code.zip" data-code-row download><span>Experiment code</span><small data-code-label>ZIP archive ↓</small></a>
+    <a href="evidence/simulation-sources.json"><span>Simulation evidence ledger</span><small>Paths &amp; SHA-256 ↗</small></a>
+    <a href="evidence/real-world.json"><span>Real-world evidence ledger</span><small>Acquisition, training &amp; evaluation ↗</small></a>
+  </div>
+  <details><summary>Earlier checkpoints and evaluation protocols</summary><p>A separate 100k pilot recorded 308/400 successes for action-side training and 309/400 for full tuning. A different 2,000-trial evaluation recorded 1,494/2,000 for the 100k action-side model. A separate full-tuning run at 15k reached 1,682/2,000 (84.10%). Initializations, training conditions or evaluation budgets differ from the main comparison. <a href="evidence/historical.csv">Historical runs</a></p></details>
+  <details><summary>Sources and attribution</summary><p>Research motivation, hardware setup and physical rollout documentation draw on the team’s September 22, November 3 and November 17 meeting materials. The November 23 team update supplies the four collection targets. Figure credits, licenses and source hashes accompany the data.</p><p class="refs"><a href="evidence/figure-attribution.txt">Figure credits</a><a href="https://arxiv.org/abs/2306.03310">LIBERO ↗</a><a href="https://arxiv.org/abs/2506.01844">SmolVLA ↗</a><a href="https://github.com/huggingface/lerobot">LeRobot ↗</a></p></details>
+</section>
+</article></div>
+</main>
+<footer class="frame"><span>SmolVLA / Grounding study · Handonghyun</span><a href="#top">Back to top ↑</a></footer>
+</body></html>

@@ -1,0 +1,204 @@
+{
+  "version": "2026-11-23",
+  "LIBERO": {
+    "evidence_id": "L",
+    "dataset": "HuggingFaceVLA/libero",
+    "dataset_revision": "86958911c0f959db2bbbdb107eb3e17c5f9c798e",
+    "demonstrations": 1693,
+    "frames": 273465,
+    "seed": 0,
+    "suites": [
+      "libero_spatial",
+      "libero_object",
+      "libero_goal",
+      "libero_10"
+    ],
+    "tasks_per_suite": 10,
+    "episodes_per_task": 50,
+    "evaluation_batch_size": 10,
+    "evaluation_success": "LeRobot LIBERO wrapper calls env.check_success() after each step; one binary success per rollout. Mean over 2,000 episodes; suite totals 500.",
+    "condition_change": "Same seed-0 action initialization. In each training scope, only VLM starting parameters differ. Frozen-scope cosine decay ends at 8k updates (held at floor to 12k); full-scope decay ends at 12k. The VQA-only source arms also differ in SFT token/update budget.",
+    "microbatch": 16,
+    "gradient_accumulation": 4,
+    "fresh_action_initialization_sha256": "844d82caea75602a3967516bb21fc00cf5728a311f7b9d2f27b13d2f0e164d32",
+    "mixed_SFT": {
+      "stage1": {
+        "libero_exact": 21861,
+        "robointer_droid_primary_box": 82735
+      },
+      "stage1_epochs": 2,
+      "stage2_only_LIBERO_rows": 21861,
+      "stage2_epochs": 1
+    },
+    "readout": "libero.csv",
+    "tasks": "libero-tasks.csv",
+    "configs": "libero-configs.csv",
+    "other_experiments": "historical.csv",
+    "task_names_source": "Installed LIBERO/libero/benchmark/libero_suite_task_map.py; benchmark default task_order_index=0 retains source order. Instruction from benchmark.grab_language_from_filename.",
+    "sensitivity": "sensitivity.csv; reproduce with python leave_one_out.py in this evidence directory.",
+    "trainable_parameters_by_scope": {
+      "frozen": 99880992,
+      "full": 392904096
+    },
+    "evaluation_settings": {
+      "policy_action_steps_executed_before_new_observation": 1,
+      "image_resolution": [
+        256,
+        256
+      ],
+      "vectorized_env_batch": 10,
+      "simulator_control_mode": "relative",
+      "initial_states": true,
+      "hard_reset": true,
+      "seed": 0,
+      "default_episode_step_limits": {
+        "libero_spatial": 280,
+        "libero_object": 280,
+        "libero_goal": 300,
+        "libero_10": 520
+      }
+    },
+    "single_source_SFT": {
+      "libero_only": {
+        "rows": 21861,
+        "source": "libero_exact",
+        "epochs": 2,
+        "updates": 1368,
+        "sha256": "2d575792a39b4b552368855ba90fb3e74ba79d7bb968f5cf481b4eec26c27567"
+      },
+      "robointer_only": {
+        "rows": 82735,
+        "source": "robointer_droid_primary_box",
+        "epochs": 2,
+        "updates": 5172,
+        "sha256": "e2d5b77006a76231f5b93ce6c317e78e47bd10610fbceb401b3ca22079a53673"
+      }
+    }
+  },
+  "Pro": {
+    "evidence_id": "P",
+    "qa_dataset": {
+      "qa": 60000,
+      "images": 15534,
+      "episodes": 7978,
+      "by_split": {
+        "train": 43939,
+        "test": 4583,
+        "val": 11478
+      },
+      "by_type": {
+        "object_bbox": 30597,
+        "relative_position": 29403
+      },
+      "by_suite": {
+        "libero_spatial": 15000,
+        "libero_goal": 15000,
+        "libero_10": 15000,
+        "libero_object": 15000
+      },
+      "limitations": [
+        "Original 128px images resized to 512; no invented extra detail.",
+        "Replay-aligned segmentation labels with bounded RGB error, not original saved simulator state.",
+        "Unsupported image/timing perturbations excluded; see sampling_plan.json.",
+        "Random temporal samples, not a full trajectory dataset; simulator pilots excluded."
+      ],
+      "geometry_validation_passed": true,
+      "answer_only_collator_passed": true,
+      "task_episode_exact_image_split_overlap": false
+    },
+    "vla_dataset": {
+      "episodes": 18751,
+      "frames": 4115692,
+      "repository": "phicoltan/libero_pro2",
+      "revision": "e527a3276cc33258e9979e6c322b703bc8c0ef62",
+      "public_to_native_rotation_degrees": 180
+    },
+    "vlm_sft": {
+      "epochs": 2,
+      "updates": 2748
+    },
+    "latest_training_checkpoints": {
+      "frozen-base": 90000,
+      "frozen-finetuned": 90000,
+      "full-base": 90000,
+      "full-finetuned": null
+    },
+    "incomplete_evaluations_at_snapshot": {
+      "frozen-base": {
+        "checkpoint_updates": 30000,
+        "total": 3390,
+        "result_complete": false,
+        "source": "outputs/libero_pro2_action_20261115/base_eval_30k/episodes.jsonl",
+        "scored_trials": 2992,
+        "successes": 7,
+        "source_prefix_sha256": "518a08a221c66fcf040df854f9e1a8a48d1a6ee5178582e3d427e548ac32f0c2"
+      },
+      "full-base": {
+        "checkpoint_updates": 30000,
+        "total": 3390,
+        "result_complete": false,
+        "source": "outputs/libero_full_vla_20261115/pro/eval_base_030000/episodes.jsonl",
+        "scored_trials": 1936,
+        "successes": 2,
+        "source_prefix_sha256": "11f59920b1ba0ebdef605b194248acba9f04b203fcdc13fe893ddfe460a07859"
+      }
+    },
+    "evaluation_unit": "339 official cases, ten repeats per case, batch 16, seed/init_state_id=repeat, frozen and full evaluated separately. Partial prefixes do not estimate final performance.",
+    "public_corpus": {
+      "repository": "phicoltan/libero_pro2",
+      "revision": "e527a3276cc33258e9979e6c322b703bc8c0ef62",
+      "episodes": 37396,
+      "frames": 8227242,
+      "tasks_in_conversion_metadata": 65,
+      "source": "outputs/libero_pro2_public_20261115/dataset/meta/info.json"
+    },
+    "evaluation_snapshot_at": "2026-11-23T17:08+09:00",
+    "evaluation_results": {
+      "summary": "pro-30k.json",
+      "trial_table": "pro-30k-trials.csv"
+    }
+  },
+  "Attention": {
+    "evidence_id": "A",
+    "dataset": "HuggingFaceVLA/libero",
+    "revision": "86958911c0f959db2bbbdb107eb3e17c5f9c798e",
+    "task": "put the white mug on the left plate and put the yellow and white mug on the right plate",
+    "episode_index": 0,
+    "frame_indices": [
+      20,
+      70,
+      120
+    ],
+    "checkpoint_updates": 8000,
+    "heads": 15,
+    "layers": 16,
+    "denoising_steps": 10,
+    "action_queries": 50,
+    "noise_seed": 0,
+    "image_feature_tokens_per_camera": 64,
+    "mode_assignment": "SA at layers 0,2,...,14; CA at 1,3,...,15",
+    "aggregation": "For each action query sum masked post-softmax probabilities over key groups, then equally average over the 3 frames, 10 denoise steps, selected layers, 15 heads and selected queries. Image adds both cameras. Row percentages in attention.csv.",
+    "figure_map": "Frozen 8k, frame 70, first action query, SA layer 14 and CA layer 15, mean over heads and denoise steps. Image token grid 8x8 per view. One common absolute scale, no spatial renormalization.",
+    "limits": "Same recorded episode and task, no success labels. Mixed CA/SA models. Visual-token weights do not identify causal effects on action or task success."
+  },
+  "publication_figures": {
+    "LIBERO rollout success": {
+      "file": "../assets/libero-curves.svg",
+      "sha256": "df4eb2e0a7f435030958196f5a5fe7b6b1efc1b15f6f95cf99fea74a880a02a3",
+      "inputs": {
+        "libero.csv": "ce729794bb8f88d4cb0e4b494cb134e870ada293bd6b90b2eeea0ba372939f97"
+      }
+    },
+    "Where the first action query attends": {
+      "file": "../assets/attention-map.png",
+      "sha256": "01d47429e118ff2c49be4e525df7de7ac3048645d0709ddc47d2de9b2f3f2b36",
+      "inputs": {
+        "attention-map-input.npz": "e8c2cc94f85f0cf795a2c8eb98a2f0f127779e2206deb24f1ea8c7e054a34b53",
+        "attention-view-0.png": "d5712986dce437c3c407c10ab28d975f4a027f56a0c7dfe840b291c0df9ad8b7",
+        "attention-view-1.png": "8b20e2e455197590cb49cb12a2e6d80cd26af0fb348de97bb16f0ac6a5f5a916"
+      }
+    },
+    "generator_in_code_repository": "analysis/build_study_figures.py",
+    "generator_sha256": "335f2cef853b31a88db3200fd31be04db0d5968830b064ac88a4a873dd2d915b"
+  }
+}

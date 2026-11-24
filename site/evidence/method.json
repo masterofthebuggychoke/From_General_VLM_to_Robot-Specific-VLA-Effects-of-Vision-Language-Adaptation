@@ -1,0 +1,25 @@
+{
+  "question_records": [
+    {
+      "id": "libero_spatial_t00_demo_0_f0010_bbox",
+      "qa_type": "grasp_target_bbox",
+      "question": "Task: pick up the black bowl between the plate and the ramekin and place it on the plate. Give the visible bounding box of the task object in this image. Return [xmin, ymin, xmax, ymax] on a 0-1000 scale.",
+      "answer": "[688,348,830,461]",
+      "image_sha256": "022923033842052024e554e65da74c531dee12d338f644d43ea46479f609c1cf",
+      "label_status": "simulator_instance_mask_ground_truth"
+    },
+    {
+      "id": "libero_spatial_t00_demo_0_f0010_relation_plate_1",
+      "qa_type": "target_vs_object_relation",
+      "question": "Task: pick up the black bowl between the plate and the ramekin and place it on the plate. In the image, is the task object above or below the plate? Compare the centers of their visible regions. Answer above or below.",
+      "answer": "below",
+      "image_sha256": "022923033842052024e554e65da74c531dee12d338f644d43ea46479f609c1cf",
+      "label_status": "simulator_instance_mask_ground_truth"
+    }
+  ],
+  "sources": {
+    "outputs/presentation_20261116/qa_examples.jsonl": "faee92beb93e7b7ff3f4b6a05b1c97104f864b404d9d0701492382a23a66782c",
+    "캡스톤디자인_미팅자료_0922.pdf": "c79ce45c7e0e99f968a722bd8701d1c54076226cfe0f292a6038b3a541dd9145"
+  },
+  "method": "The website and manuscript summarize these two source questions in English. Dataset and training details are recorded in simulation.json and simulation-sources.json."
+}
